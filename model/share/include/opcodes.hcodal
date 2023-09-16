@@ -50,60 +50,61 @@
   //Uncomment lines and fill in the required values
    //######################################################################################################################
 
-#define FUNCT7_SLT     (//enter funct7 in binary here)
-#define FUNCT7_SLTU    (//enter funct7 in binary here)
-#define FUNCT7_AND     (//enter funct7 in binary here)
-#define FUNCT7_OR      (//enter funct7 in binary here)
-#define FUNCT7_XOR     (//enter funct7 in binary here)
-#define FUNCT7_SLL     (//enter funct7 in binary here)
-#define FUNCT7_SRL     (//enter funct7 in binary here)
-#define FUNCT7_SUB     (//enter funct7 in binary here)
-#define FUNCT7_SRA     (//enter funct7 in binary here)
+#define FUNCT7_SLT     (0b0000000)
+#define FUNCT7_SLTU    (0b0000000)
+#define FUNCT7_AND     (0b0000000)
+#define FUNCT7_OR      (0b0000000)
+#define FUNCT7_XOR     (0b0000000)
+#define FUNCT7_SLL     (0b0000000)
+#define FUNCT7_SRL     (0b0000000)
+#define FUNCT7_SUB     (0b1000000)
+#define FUNCT7_SRA     (0b1000000)
 
 // -------------------------------------------------------------
 // Funct3 definitions per extended opcode
 // -------------------------------------------------------------
 
-// #define FUNCT3_SLLI    (//enter funct3 in binary here)
-// #define FUNCT3_SRLI    (//enter funct3 in binary here)
-// #define FUNCT3_SRAI    (//enter funct3 in binary here)
+ #define FUNCT3_SLLI    (0b001)
+ #define FUNCT3_SRLI    (0b001)
+ #define FUNCT3_SRAI    (0b001)
 
 #define FUNCT3_ADD     (0b000)
-// #define FUNCT3_SLT     (//enter funct3 in binary here)
-// #define FUNCT3_SLTU    (//enter funct3 in binary here)
-// #define FUNCT3_AND     (//enter funct3 in binary here)
-// #define FUNCT3_OR      (//enter funct3 in binary here)
-// #define FUNCT3_XOR     (//enter funct3 in binary here)
-// #define FUNCT3_SLL     (//enter funct3 in binary here)
-// #define FUNCT3_SRL     (//enter funct3 in binary here)
-// #define FUNCT3_SUB     (//enter funct3 in binary here)
-// #define FUNCT3_SRA     (//enter funct3 in binary here)
+#define FUNCT3_SLT     (0b010)
+#define FUNCT3_SLTU    (0b011)
+#define FUNCT3_AND     (0b111)
+#define FUNCT3_OR      (0b110)
+#define FUNCT3_XOR     (0b100)
+#define FUNCT3_SLL     (0b001)
+#define FUNCT3_SRL     (0b101)
+#define FUNCT3_SUB     (0b000)
+#define FUNCT3_SRA     (0b101)
 
 #define FUNCT3_ADDI    (0b000)
-// #define FUNCT3_SLTI    (//enter funct3 in binary here)
-// #define FUNCT3_SLTIU   (//enter funct3 in binary here
-// #define FUNCT3_ANDI    (//enter funct3 in binary here)
-// #define FUNCT3_ORI     (//enter funct3 in binary here)
-// #define FUNCT3_XORI    (//enter funct3 in binary here)
+#define FUNCT3_SLTI    (0b010) 
+#define FUNCT3_SLTIU   (0b011) 
+#define FUNCT3_ANDI    (0b111) 
+#define FUNCT3_ORI     (0b110) 
+#define FUNCT3_XORI    (0b100) 
 
  #define FUNCT3_BEQ     (0b000)
-// #define FUNCT3_BNE     (//enter funct3 in binary here)
-// #define FUNCT3_BLT     (//enter funct3 in binary here)
-// #define FUNCT3_BLTU    (//enter funct3 in binary here)
-//  #define FUNCT3_BGE     (//enter funct3 in binary here)
-//  #define FUNCT3_BGEU    (//enter funct3 in binary here)
+#define FUNCT3_BNE     (0b001) 
+#define FUNCT3_BLT     (0b100) 
+#define FUNCT3_BLTU    (0b110)
+#define FUNCT3_BGE     (0b101) 
+#define FUNCT3_BGEU    (0b111) 
 
-// #define FUNCT3_LB      (//enter funct3 in binary here)
-// #define FUNCT3_LH      (//enter funct3 in binary here)
-// #define FUNCT3_LW      (//enter funct3 in binary here)
-// #define FUNCT3_LBU     (//enter funct3 in binary here)
-// #define FUNCT3_LHU     (//enter funct3 in binary here)
+#define FUNCT3_LB      (0b000) 
+#define FUNCT3_LH      (0b001)
+#define FUNCT3_LW      (0b010) 
+#define FUNCT3_LBU     (0b100) 
+#define FUNCT3_LHU     (0b101) 
 
-// #define FUNCT3_SB      (//enter funct3 in binary here)
-// #define FUNCT3_SH      (//enter funct3 in binary here)
-// #define FUNCT3_SW      (//enter funct3 in binary here)
+#define FUNCT3_SB      (0b000) 
+#define FUNCT3_SH      (0b001) 
+#define FUNCT3_SW      (0b010) 
 
-//  #define FUNCT3_JALR    (//enter funct3 in binary here)
+#define FUNCT3_JALR    (0b000) 
+
 
 
 #define FUNCT3_CSRRW   (0b001)
@@ -117,8 +118,9 @@
 // opcode (bits 0:6)
 enum UTYPE_OPCODES : uint7 {
     UTYPE_LUI   = 0b0110111,
-    // UTYPE_AUIPC = //enter opcode in binary here
+    UTYPE_AUIPC = 0b0010111
 };
+
 
 // J-TYPE Opcodes
 // opcode (bits 0:6)
@@ -133,11 +135,12 @@ enum BTYPE_OPCODES : uint10 {
  //#####################################################Phase 2#################################################################
   //Uncomment lines and fill in the required values
    //######################################################################################################################
-    // BTYPE_BNE   = //enter concatenation of func3 and opcode in binary here
-    // BTYPE_BLT   = //enter concatenation of func3 and opcode in binary here
-    // BTYPE_BGE   = //enter concatenation of func3 and opcode in binary here
-    // BTYPE_BLTU  = //enter concatenation of func3 and opcode in binary here
-    // BTYPE_BGEU  = //enter concatenation of func3 and opcode in binary here
+    BTYPE_BNE   = (FUNCT3_BNE << 3) | OPCODE_BTYPE_BRANCHES,
+    BTYPE_BLT   = (FUNCT3_BLT << 3) | OPCODE_BTYPE_BRANCHES,
+    BTYPE_BGE   = (FUNCT3_BGE << 3) | OPCODE_BTYPE_BRANCHES,
+    BTYPE_BLTU  = (FUNCT3_BLTU << 3) | OPCODE_BTYPE_BRANCHES,
+    BTYPE_BGEU  = (FUNCT3_BGEU << 3) | OPCODE_BTYPE_BRANCHES
+
 };
 
 // R-Type 2-argument Opcodes
@@ -148,15 +151,16 @@ enum RTYPE_OPCODES : uint17 {
     //#####################################################Phase 2#################################################################
   //Uncomment lines and fill in the required values
    //######################################################################################################################
-    // RTYPE_SUB   = //enter concatenation of func7, func3 and opcode in binary here,
-    // RTYPE_SLL   =  //enter concatenation of func7, func3 and opcode in binary here,
-    // RTYPE_SLT   =  //enter concatenation of func7, func3 and opcode in binary here,
-    // RTYPE_SLTU  =  //enter concatenation of func7, func3 and opcode in binary here,
-    // RTYPE_XOR   =  //enter concatenation of func7, func3 and opcode in binary here,,
-    // RTYPE_SRL   =  //enter concatenation of func7, func3 and opcode in binary here,,
-    // RTYPE_SRA   =  //enter concatenation of func7, func3 and opcode in binary here,,
-    // RTYPE_OR    =  //enter concatenation of func7, func3 and opcode in binary here,,
-    // RTYPE_AND   =  //enter concatenation of func7, func3 and opcode in binary here,
+    RTYPE_SUB   = (FUNCT7_SUB << 10) | (FUNCT3_SUB << 3) | OPCODE_RTYPE_ALU,
+    RTYPE_SLL   = (FUNCT7_SLL << 10) | (FUNCT3_SLL << 3) | OPCODE_RTYPE_ALU,
+    RTYPE_SLT   = (FUNCT7_SLT << 10) | (FUNCT3_SLT << 3) | OPCODE_RTYPE_ALU,
+    RTYPE_SLTU  = (FUNCT7_SLTU << 10) | (FUNCT3_SLTU << 3) | OPCODE_RTYPE_ALU,
+    RTYPE_XOR   = (FUNCT7_XOR << 10) | (FUNCT3_XOR << 3) | OPCODE_RTYPE_ALU,
+    RTYPE_SRL   = (FUNCT7_SRL << 10) | (FUNCT3_SRL << 3) | OPCODE_RTYPE_ALU,
+    RTYPE_SRA   = (FUNCT7_SRA << 10) | (FUNCT3_SRA << 3) | OPCODE_RTYPE_ALU,
+    RTYPE_OR    = (FUNCT7_OR << 10) | (FUNCT3_OR << 3) | OPCODE_RTYPE_ALU,
+    RTYPE_AND   = (FUNCT7_AND << 10) | (FUNCT3_AND << 3) | OPCODE_RTYPE_ALU
+
 };
 
 // I-Type Immediate Opcodes (format)
@@ -166,18 +170,18 @@ enum ITYPE_OPCODES : uint10 {
     //#####################################################Phase 2#################################################################
   //Uncomment lines and fill in the required values
    //######################################################################################################################
-    // ITYPE_SLTI  = //enter concatenation of func3 and opcode in binary here,
-    // ITYPE_SLTIU = //enter concatenation of func3 and opcode in binary here,
-    // ITYPE_XORI  = //enter concatenation of func3 and opcode in binary here,
-    // ITYPE_ORI   = //enter concatenation of func3 and opcode in binary here,
-    // ITYPE_ANDI  = //enter concatenation of func3 and opcode in binary here,
+    ITYPE_SLTI   = (FUNCT3_SLTI << 3) | OPCODE_ITYPE_ALU,
+    ITYPE_SLTIU  = (FUNCT3_SLTIU << 3) | OPCODE_ITYPE_ALU,
+    ITYPE_XORI   = (FUNCT3_XORI << 3) | OPCODE_ITYPE_ALU,
+    ITYPE_ORI    = (FUNCT3_ORI << 3) | OPCODE_ITYPE_ALU,
+    ITYPE_ANDI   = (FUNCT3_ANDI << 3) | OPCODE_ITYPE_ALU,
+    ITYPE_JALR   = (FUNCT3_JALR << 3) | OPCODE_ITYPE_JALR,
+    ITYPE_LB     = (FUNCT3_LB << 3) | OPCODE_ITYPE_LOAD,
+    ITYPE_LH     = (FUNCT3_LH << 3) | OPCODE_ITYPE_LOAD,
+    ITYPE_LW     = (FUNCT3_LW << 3) | OPCODE_ITYPE_LOAD,
+    ITYPE_LBU    = (FUNCT3_LBU << 3) | OPCODE_ITYPE_LOAD,
+    ITYPE_LHU    = (FUNCT3_LHU << 3) | OPCODE_ITYPE_LOAD
 
-    //  ITYPE_JALR  = (//enter concatenation of func3 and opcode in binary here,
-    // ITYPE_LB    = //enter concatenation of func3 and opcode in binary here,
-    // ITYPE_LH    = //enter concatenation of func3 and opcode in binary here,
-    // ITYPE_LW    = //enter concatenation of func3 and opcode in binary here,
-    // ITYPE_LBU   = //enter concatenation of func3 and opcode in binary here,
-    // ITYPE_LHU   = //enter concatenation of func3 and opcode in binary here
 };
 
 // Immediate Shift Operations
@@ -187,11 +191,11 @@ enum ITYPE_OPCODES : uint10 {
 //#####################################################Phase 2#################################################################
   //Uncomment lines and fill in the required values
    //######################################################################################################################
-// enum IMM_SHIFT_OPCODES : uint17 {
-    // IMM_SHIFT_SLLI  =  //enter concatenation of func7, func3 and opcode in binary here, 
-    // IMM_SHIFT_SRLI  =  //enter concatenation of func7, func3 and opcode in binary here,
-    // IMM_SHIFT_SRAI  =  //enter concatenation of func7, func3 and opcode in binary here,
-// };
+enum IMM_SHIFT_OPCODES : uint17 {
+    IMM_SHIFT_SLLI = (FUNCT7_SLLI << 10) | (FUNCT3_SLLI << 7) | OPCODE_IMM_SHIFT,
+    IMM_SHIFT_SRLI = (FUNCT7_SRLI << 10) | (FUNCT3_SRLI << 7) | OPCODE_IMM_SHIFT,
+    IMM_SHIFT_SRAI = (FUNCT7_SRAI << 10) | (FUNCT3_SRAI << 7) | OPCODE_IMM_SHIFT
+};
 
 
 // S-Type Opcodes and associated func3 codes
@@ -199,11 +203,11 @@ enum ITYPE_OPCODES : uint10 {
 //#####################################################Phase 2#################################################################
   //Uncomment lines and fill in the required values
    //######################################################################################################################
-// enum STYPE_OPCODES : uint10 {
-    // STYPE_SB    = //enter concatenation of func3 and opcode in binary here,
-    // STYPE_SH    = //enter concatenation of func3 and opcode in binary here,
-    // STYPE_SW    = //enter concatenation of func3 and opcode in binary here
-// };
+enum STYPE_OPCODES : uint10 {
+    STYPE_SB  = (FUNCT3_SB << 7) | OPCODE_STYPE,
+    STYPE_SH  = (FUNCT3_SH << 7) | OPCODE_STYPE,
+    STYPE_SW  = (FUNCT3_SW << 7) | OPCODE_STYPE
+};
 
 // Miscellaneous Opcodes and associated func3 codes
 enum MISC10_OPCODES : uint10 {
