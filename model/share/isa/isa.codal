@@ -45,53 +45,51 @@
 // defined for each type of RISCV instructions.  For the assembler, disassembler, c-compiler, and other tools,
 // a complete set of RISCV instructions must be defined.  We us the set operator to combine the separate RISCV
 // instructions into a single set, isa
-//#####################################################Phase 2#################################################################
-//uncomment all other instruction groups and the e_isa set definition
- //######################################################################################################################
-
 set isa = i_rtype_alu,
-      i_shift_imm,
+    i_shift_imm,
     i_itype_alu,
-     i_itype_loads,
-     i_stype_store,
-     i_utype_ops,
-     i_jtype_jlink,
-     i_itype_jlreg,
-     i_btype_branches,
- #if defined(OPTION_CSR_ENABLED)
-     i_csr_ops,
-     i_csri_ops,
- #endif
-     i_nop_alias,
-     i_li_alias,     // Action Item:  upgrade to support 32-bit immediates
-     i_mv_alias,
-     i_not_alias,
-     i_neg_alias,
-     i_seqz_alias,
-     i_snez_alias,
-     i_sltz_alias,
-     i_sgtz_alias,
-     i_sgt_alias,
-     i_beqz_alias,
-     i_bnez_alias,
-     i_blez_alias,
-     i_bltz_alias,
-     i_bgez_alias,
-     i_bgtz_alias,
-     i_bgt_alias,
-     i_ble_alias,
-     i_bgtu_alias,
-     i_bleu_alias,
-     i_j_alias,
-     i_jr_alias,
-     i_ret_alias,
-     i_call_alias,
- //    i_la_alias,
-     i_call_reg_alias,
-     i_jal_abs_calias,
-     i_halt;              // i_halt and i_syscall are special function reserved for Codasip Studio simulation
+    i_itype_loads,
+    i_stype_store,
+    i_utype_ops,
+    i_jtype_jlink,
+    i_itype_jlreg,
+    i_btype_branches,
+#if defined(OPTION_CSR_ENABLED)
+    i_csr_ops,
+    i_csri_ops,
+#endif
+    i_nop_alias,
+    i_li_alias,     // Action Item:  upgrade to support 32-bit immediates
+    i_mv_alias,
+    i_not_alias,
+    i_neg_alias,
+    i_seqz_alias,
+    i_snez_alias,
+    i_sltz_alias,
+    i_sgtz_alias,
+    i_sgt_alias,
+    i_beqz_alias,
+    i_bnez_alias,
+    i_blez_alias,
+    i_bltz_alias,
+    i_bgez_alias,
+    i_bgtz_alias,
+    i_bgt_alias,
+    i_ble_alias,
+    i_bgtu_alias,
+    i_bleu_alias,
+    i_j_alias,
+    i_jr_alias,
+    i_ret_alias,
+    i_call_alias,
+//    i_la_alias,
+    i_call_reg_alias,
+    i_jal_abs_calias,
+    i_halt;              // i_halt and i_syscall are special function reserved for Codasip Studio simulation
+//    i_syscall;
 
-   set e_isa = e_movi32;
+set e_isa = e_movi32;
+//    e_call_reg_imm;
 
 // -------------------------------------------------------------------------------------------------
 // Start section
@@ -103,7 +101,7 @@ start
 {
 // The whole ISA is used.
 roots = { isa };
-// emulations = {e_isa};
+emulations = {e_isa};
 };
 
 
@@ -134,10 +132,6 @@ roots = { isa };
 // the same number and type of operands and the assembly code for each instruction will have the same format
 
 DEF_OPC(add, "add", RTYPE_ADD)
- //#####################################################Phase 2#################################################################
-//uncomment the folowing code
- //######################################################################################################################
-
 DEF_OPC(sub, "sub", RTYPE_SUB)
 DEF_OPC(sll, "sll", RTYPE_SLL)
 DEF_OPC(slt, "slt", RTYPE_SLT)
@@ -149,11 +143,7 @@ DEF_OPC(or, "or", RTYPE_OR)
 DEF_OPC(and, "and", RTYPE_AND)
 DEF_OPC(mask, "mask", RTYPE_MASK)
 
- //#####################################################Phase 2#################################################################
-// uncomment the instructions after the opc_add
- //######################################################################################################################
-
-set opc_rtype_alu = opc_add; //, opc_sub, opc_sll, opc_slt, opc_sltu, opc_xor, opc_srl, opc_sra, opc_or, opc_and, opc_mask;
+set opc_rtype_alu = opc_add, opc_sub, opc_sll, opc_slt, opc_sltu, opc_xor, opc_srl, opc_sra, opc_or, opc_and, opc_mask;
 
 element i_rtype_alu           // define the instruction for the rtype arithmetic opcodes
 {
@@ -193,8 +183,7 @@ element i_rtype_alu           // define the instruction for the rtype arithmetic
             case RTYPE_ADD:
                 result = src1 + src2;
                 break;
-                //ADD REMAINING OF INSTRUCTION SEMANTICS HERE
-                case RTYPE_SUB:
+            case RTYPE_SUB:
                 result = src1 - src2;
                 break;
             case RTYPE_SLL:
@@ -238,9 +227,6 @@ element i_rtype_alu           // define the instruction for the rtype arithmetic
 };
 
 // Combine the immediate shift instructions that are specialized itype set of instructions
- //#####################################################Phase 2#################################################################
-// uncomment the following lines of code
- //######################################################################################################################
 
 DEF_OPC(slli, "slli", IMM_SHIFT_SLLI)
 DEF_OPC(srli, "srli", IMM_SHIFT_SRLI)
@@ -258,7 +244,6 @@ element i_shift_imm                     // define the instruction for the shift 
 
     semantics
     {
-        //ADD SEMANTIC SECTION HERE
         uint32 src1, immediate, result;
 
         src1 = rf_xpr_read(rs1);
@@ -276,7 +261,7 @@ element i_shift_imm                     // define the instruction for the shift 
                 break;
             default:
                 result = 0;
-              eprintf("Default case: %d", opc);
+//                eprintf("Default case: %d", opc);
                 break;
         }
 
@@ -285,20 +270,15 @@ element i_shift_imm                     // define the instruction for the shift 
 };
 
 // combine all the i-type arithmetic operations
+
 DEF_OPC(addi, "addi", ITYPE_ADDI)
- //#####################################################Phase 2#################################################################
-// uncomment the following lines of code
- //######################################################################################################################
 DEF_OPC(slti, "slti", ITYPE_SLTI)
 DEF_OPC(sltiu, "sltiu", ITYPE_SLTIU)
 DEF_OPC(xori, "xori", ITYPE_XORI)
 DEF_OPC(ori, "ori", ITYPE_ORI)
 DEF_OPC(andi, "andi", ITYPE_ANDI)
- //#####################################################Phase 2#################################################################
-// uncomment the instructions after the opc_addi
- //######################################################################################################################
 
-set opc_itype_alu = opc_addi;//, opc_slti, opc_sltiu, opc_xori, opc_ori, opc_andi;
+set opc_itype_alu = opc_addi, opc_slti, opc_sltiu, opc_xori, opc_ori, opc_andi;
 
 element i_itype_alu
 {
@@ -320,8 +300,7 @@ element i_itype_alu
             case ITYPE_ADDI:
                 result = src1 + immediate;
                 break;
-               //ADD REMAINING OF INSTRUCTION SEMANTICS HERE  
-               case ITYPE_SLTI:
+            case ITYPE_SLTI:
                 if ((int32)src1 < (int32)immediate) result = 1;
                 else result = 0;
                 break;
@@ -337,10 +316,10 @@ element i_itype_alu
                 break;
             case ITYPE_ANDI:
                 result = src1 & immediate;
-                 break; 
+                break;
             default:
                 result = 0;
-                eprintf("Default case: %d", opc);
+//                eprintf("Default case: %d", opc);
                 break;
         }
 
@@ -350,9 +329,6 @@ element i_itype_alu
 };
 
 // combine all i-type load instructions
-//#####################################################Phase 2#################################################################
-// uncomment the following lines of code
- //#####################################################################################################################
 
 DEF_OPC (lb, "lb", ITYPE_LB)
 DEF_OPC (lh, "lh", ITYPE_LH)
@@ -370,15 +346,21 @@ element i_itype_loads
     assembly { opc rd "," simm "(" rs1 ")"};
     binary { simm rs1 FUNC3(opc) rd OPCODE(opc)};
 
-     semantics {
-        //ADD SEMANTIC SECTION HERE
+    semantics {
+        uint32 address, result;
+        // Microarchitectural design might lead to higher latency of some instructions.  In this model,
+        // all load instructions have latency of two cycles.  Compiler is aware of the different latency,
+        // because appropriate schedule class was assigned, and reorders instructions to achieve higher
+        // instruction peformance
+        codasip_compiler_schedule_class(sc_load);
+
+        address = rf_xpr_read(rs1) + (int32) simm;
+        result = load(opc, address);
+        rf_xpr_write(result, rd);
     };
 };
 
 // combine all the s-type store instructions
-//#####################################################Phase 2#################################################################
-// uncomment the following lines of code
- //######################################################################################################################
 
 DEF_OPC(sb, "sb", STYPE_SB)
 DEF_OPC(sh, "sh", STYPE_SH)
@@ -395,8 +377,7 @@ element i_stype_store
     binary { simm[11..5] rs2 rs1 FUNC3(opc) simm[4..0] OPCODE(opc)};
 
     semantics {
-           //ADD SEMANTIC SECTION HERE
-           uint32 address, result;
+        uint32 address, result;
 
         address = rf_xpr_read(rs1) + (int32) simm;
         result = rf_xpr_read(rs2);
@@ -418,21 +399,15 @@ element i_stype_store
                 }
             }
         }
-       
     };
 };
 
 // combine all the u-type jump instructions
 
 DEF_OPC(lui, "lui", UTYPE_LUI)
-//#####################################################Phase 2#################################################################
-// uncomment the following lines of code
- //#####################################################################################################################
 DEF_OPC(auipc, "auipc", UTYPE_AUIPC)
-//#####################################################Phase 2#################################################################
-// uncomment the other instruction after opc_lui
- //######################################################################################################################
-set opc_utype_ops = opc_lui; //, opc_auipc;
+
+set opc_utype_ops = opc_lui, opc_auipc;
 
 element i_utype_ops
 {
@@ -443,8 +418,7 @@ element i_utype_ops
     binary {imm rd opc};
 
     semantics {
-                //ADD SEMANTIC SECTION HERE
-                uint32 result, current_pc;
+        uint32 result, current_pc;
         result = 0;
 
         switch (opc) {
@@ -459,29 +433,43 @@ element i_utype_ops
                 break;
             default:
                 result = 0;
-               eprintf("Default case: %d", opc);
+//                eprintf("Default case: %d", opc);
                 break;
         }
-
     };
 };
 
 // j-type jump & link instruction
-//#####################################################Phase 2#################################################################
-// uncomment the following lines of code
- //######################################################################################################################
 
 DEF_OPC(jal, "jal", JTYPE_JAL)
 
 set opc_jtype_jlink = opc_jal;
 
+element i_jtype_jlink
+{
+    use opc_jtype_jlink as opc;
+    use xpr_all as rd;
+    use relative_addr20 as simm;
+    assembly { opc rd "," simm};
+    binary { simm[19..19] simm[9..0] simm[10..10] simm[18..11] rd opc};
 
+    semantics {
+        uint32 target_address, current_pc;
+
+        if (opc == JTYPE_JAL) {
+            current_pc = read_pc();                         // Current PC is already pointing to pc of instruction + 4
+            rf_xpr_write(current_pc, rd);
+            target_address = current_pc + simm - RISCV_INSTR_SIZE;  // offset is based on the pc of the jal instruction
+            write_pc(target_address);
+        } else {
+//                eprintf("Default case: %d", opc);
+        }
+    };
+};
 
 // r-type jump and link register
-//#####################################################Phase 2#################################################################
-// uncomment the following lines of code
- //######################################################################################################################
- DEF_OPC(jalr, "jalr", ITYPE_JALR)
+
+DEF_OPC(jalr, "jalr", ITYPE_JALR)
 
 set opc_itype_jlreg = opc_jalr;
 
@@ -494,33 +482,22 @@ element i_itype_jlreg
     binary { simm  rs1 FUNC3(opc) rd OPCODE(opc)};
 
     semantics {
-                //ADD SEMANTIC SECTION HERE
-                uint32 result, current_pc;
-        result = 0;
+        uint32 target_address, current_pc, reg_addr;
 
-        switch (opc) {
-            case UTYPE_LUI:
-                result = (int32)imm << 12;
-                rf_xpr_write(result, rd);
-                break;
-            case UTYPE_AUIPC:
-                current_pc = read_pc() - RISCV_INSTR_SIZE;
-                result = current_pc + ((int32)imm << 12);
-                rf_xpr_write(result, rd);
-                break;
-            default:
-                result = 0;
-                eprintf("Default case: %d", opc);
-                break;
+        if (opc == ITYPE_JALR) {
+            current_pc = read_pc();                 // Current PC is already pointing to pc of instruction + 4
+            reg_addr = rf_xpr_read(rs1);
+            target_address = (reg_addr + (int32)simm) & ~0x1;
+            rf_xpr_write(current_pc, rd);
+            write_pc(target_address);
+        } else {
+//                eprintf("Default case: %d", opc);
         }
-//         
     };
 };
 
 // Combine b-type conditional branch instructions
-//#####################################################Phase 2#################################################################
-// uncomment the following lines of code
- //######################################################################################################################
+
 DEF_OPC(beq, "beq", BTYPE_BEQ)
 DEF_OPC(bne, "bne", BTYPE_BNE)
 DEF_OPC(blt, "blt", BTYPE_BLT)
@@ -541,8 +518,7 @@ element i_btype_branches
 
 
     semantics {
-                //ADD SEMANTIC SECTION HERE
-                uint32 result, target_address;
+        uint32 result, target_address;
         uint32 src1, src2;
 
         src1 = rf_xpr_read(rs1);
@@ -550,11 +526,11 @@ element i_btype_branches
 
         target_address = r_pc + (int32)imm - RISCV_INSTR_SIZE;
 
-// //
-// // Using the conditional expression ? to evaluate the branch conditional statement.  If true,
-// // set result to 1 and if false, set result to 0.  If the statement is true, then update pc with
-// // the branched address.
-// //
+//
+// Using the conditional expression ? to evaluate the branch conditional statement.  If true,
+// set result to 1 and if false, set result to 0.  If the statement is true, then update pc with
+// the branched address.
+//
         switch (opc) {
             case BTYPE_BEQ:
                 result =  (src1 == src2) ? 1 : 0;
@@ -576,10 +552,11 @@ element i_btype_branches
                 break;
             default:
                 result = 0;
-                eprintf("Default case: %d", opc);
+//                eprintf("Default case: %d", opc);
                 break;
         }
         if (result) write_pc(target_address);
+
     };
 };
 
@@ -642,11 +619,6 @@ element i_mv_alias : assembler_alias(i_itype_alu)
     binary {ZERO_IMM12 rs1 ITYPE_ADDI[9..7] rd ITYPE_ADDI[6..0]};
 };
 
-
-//#####################################################Phase 2#################################################################
-// uncomment the following lines of code
- //######################################################################################################################
-
 /**
  * NOT (not) pseudo instruction
  * In RISCV, not rd, rs equates to xori rd, rs1, -1
@@ -662,7 +634,7 @@ element i_not_alias : assembler_alias(i_itype_alu)
 /**
  * NEG (neg) pseudo instruction
  * In RISCV, neg rd, rs equates to sub rd, x0, rs2  (x0 refers register 0 which also equates to the value 0)
-//  */
+ */
 element i_neg_alias : assembler_alias(i_rtype_alu)
 {
     use xpr_all as rd, rs2;
@@ -671,10 +643,10 @@ element i_neg_alias : assembler_alias(i_rtype_alu)
     binary {RTYPE_SUB[16..10] rs2 ZERO_REG RTYPE_SUB[9..7] rd RTYPE_SUB[6..0]};
 };
 
-// /**
-//  * Set if = zero (seqz) pseudo instruction
-//  * In RISCV, seqz rd, rs equates to sltiu rd, rs1, 1
-//  */
+/**
+ * Set if = zero (seqz) pseudo instruction
+ * In RISCV, seqz rd, rs equates to sltiu rd, rs1, 1
+ */
 element i_seqz_alias : assembler_alias(i_itype_alu)
 {
     use xpr_all as rd, rs1;
@@ -683,10 +655,10 @@ element i_seqz_alias : assembler_alias(i_itype_alu)
     binary {ONE_IMM12 rs1 ITYPE_SLTIU[9..7] rd ITYPE_SLTIU[6..0]};
 };
 
-// /**
-//  * Set if |= zero (snez) pseudo instruction
-//  * In RISCV, snez rd, rs equates to sltu rd, x0, rs2  (x0 refers register 0 which also equates to the value 0)
-//  */
+/**
+ * Set if |= zero (snez) pseudo instruction
+ * In RISCV, snez rd, rs equates to sltu rd, x0, rs2  (x0 refers register 0 which also equates to the value 0)
+ */
 element i_snez_alias : assembler_alias(i_rtype_alu)
 {
     use xpr_all as rd, rs2;
@@ -695,10 +667,10 @@ element i_snez_alias : assembler_alias(i_rtype_alu)
     binary {RTYPE_SLTU[16..10] rs2 ZERO_REG RTYPE_SLTU[9..7] rd RTYPE_SLTU[6..0]};
 };
 
-// /**
-//  * Set if < zero (sltz) pseudo instruction
-//  * In RISCV, sltz rd, rs equates to slt rd, rs1, x0  (x0 refers register 0 which also equates to the value 0)
-//  */
+/**
+ * Set if < zero (sltz) pseudo instruction
+ * In RISCV, sltz rd, rs equates to slt rd, rs1, x0  (x0 refers register 0 which also equates to the value 0)
+ */
 element i_sltz_alias : assembler_alias(i_rtype_alu)
 {
     use xpr_all as rd, rs1;
@@ -707,10 +679,10 @@ element i_sltz_alias : assembler_alias(i_rtype_alu)
     binary {RTYPE_SLT[16..10] ZERO_REG rs1 RTYPE_SLT[9..7] rd RTYPE_SLT[6..0]};
 };
 
-// /**
-//  * Set if > zero (sgtz) pseudo instruction
-//  * In RISCV, sgtz rd, rs equates to slt rd, x0, rs2  (x0 refers register 0 which also equates to the value 0)
-//  */
+/**
+ * Set if > zero (sgtz) pseudo instruction
+ * In RISCV, sgtz rd, rs equates to slt rd, x0, rs2  (x0 refers register 0 which also equates to the value 0)
+ */
 element i_sgtz_alias : assembler_alias(i_rtype_alu)
 {
     use xpr_all as rd, rs2;
@@ -719,10 +691,10 @@ element i_sgtz_alias : assembler_alias(i_rtype_alu)
     binary {RTYPE_SLT[16..10] rs2 ZERO_REG RTYPE_SLT[9..7] rd RTYPE_SLT[6..0]};
 };
 
-// /**
-//  * Set if rs1 > rs2 (setge) pseudo instruction
-//  * In RISCV, setge rd, rs1, rs2 equstes to slt rd, rs2, rs1
-//  */
+/**
+ * Set if rs1 > rs2 (setge) pseudo instruction
+ * In RISCV, setge rd, rs1, rs2 equstes to slt rd, rs2, rs1
+ */
 
 element i_sgt_alias : assembler_alias(i_rtype_alu)
 {
@@ -732,10 +704,10 @@ element i_sgt_alias : assembler_alias(i_rtype_alu)
 
 };
 
-// /**
-//  * Branch if = 0 (beqz) pseudo instruction
-//  * In RISCV, beqz rs1, offset equates to beq rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
-//  */
+/**
+ * Branch if = 0 (beqz) pseudo instruction
+ * In RISCV, beqz rs1, offset equates to beq rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
+ */
 element i_beqz_alias : assembler_alias(i_btype_branches)
 {
     use xpr_all as rs1;
@@ -745,10 +717,10 @@ element i_beqz_alias : assembler_alias(i_btype_branches)
     binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BEQ[9..7] simm[3..0] simm[10..10] BTYPE_BEQ[6..0]};
 };
 
-// /**
-//  * Branch if != 0 (bnez) pseudo instruction
-//  * In RISCV, bnez rs1, offset equates to bne rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
-//  */
+/**
+ * Branch if != 0 (bnez) pseudo instruction
+ * In RISCV, bnez rs1, offset equates to bne rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
+ */
 element i_bnez_alias : assembler_alias(i_btype_branches)
 {
     use xpr_all as rs1;
@@ -758,10 +730,10 @@ element i_bnez_alias : assembler_alias(i_btype_branches)
     binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BNE[9..7] simm[3..0] simm[10..10] BTYPE_BNE[6..0]};
 };
 
-// /**
-//  * Branch if < 0 (bltz) pseudo instruction
-//  * In RISCV, bltz rs1, offset equates to blt rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
-//  */
+/**
+ * Branch if < 0 (bltz) pseudo instruction
+ * In RISCV, bltz rs1, offset equates to blt rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
+ */
 element i_bltz_alias : assembler_alias(i_btype_branches)
 {
     use xpr_all as rs1;
@@ -771,10 +743,10 @@ element i_bltz_alias : assembler_alias(i_btype_branches)
     binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BLT[9..7] simm[3..0] simm[10..10] BTYPE_BLT[6..0]};
 };
 
-// /**
-//  * Branch if > 0 (bgtz) pseudo instruction
-//  * In RISCV, bgtz rs1, offset equates to blt x0, rs2, offset (x0 refers register 0 which also equates to the value 0)
-//  */
+/**
+ * Branch if > 0 (bgtz) pseudo instruction
+ * In RISCV, bgtz rs1, offset equates to blt x0, rs2, offset (x0 refers register 0 which also equates to the value 0)
+ */
 element i_bgtz_alias : assembler_alias(i_btype_branches)
 {
     use xpr_all as rs2;
@@ -784,10 +756,10 @@ element i_bgtz_alias : assembler_alias(i_btype_branches)
     binary {simm[11..11] simm[9..4] rs2 ZERO_REG BTYPE_BLT[9..7] simm[3..0] simm[10..10] BTYPE_BLT[6..0]};
 };
 
-// /**
-//  * Branch if rs1 > rs2 (bgt) pseudo instruction
-//  * In RISCV, bgt rs1, rs2, offset equates to blt rs2, rs1, offset
-//  */
+/**
+ * Branch if rs1 > rs2 (bgt) pseudo instruction
+ * In RISCV, bgt rs1, rs2, offset equates to blt rs2, rs1, offset
+ */
 element i_bgt_alias : assembler_alias(i_btype_branches)
 {
     use xpr_all as rs1, rs2;
@@ -797,10 +769,10 @@ element i_bgt_alias : assembler_alias(i_btype_branches)
     binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BLT[9..7] simm[3..0] simm[10..10] BTYPE_BLT[6..0]};
 };
 
-// /**
-//  * Branch if rs1 > rs2 unsigned (bgtu) pseudo instruction
-//  * In RISCV, ble rs1, rs2, offset equates to bltu rs2, rs1, offset
-//  */
+/**
+ * Branch if rs1 > rs2 unsigned (bgtu) pseudo instruction
+ * In RISCV, ble rs1, rs2, offset equates to bltu rs2, rs1, offset
+ */
 element i_bgtu_alias : assembler_alias(i_btype_branches)
 {
     use xpr_all as rs1, rs2;
@@ -810,10 +782,10 @@ element i_bgtu_alias : assembler_alias(i_btype_branches)
     binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BLTU[9..7] simm[3..0] simm[10..10] BTYPE_BLTU[6..0]};
 };
 
-// /**
-//  * Branch if rs1 <= rs2 unsigned (bleu) pseudo instruction
-//  * In RISCV, ble rs1, offset equates to bgeu rs2, rs1, offset
-//  */
+/**
+ * Branch if rs1 <= rs2 unsigned (bleu) pseudo instruction
+ * In RISCV, ble rs1, offset equates to bgeu rs2, rs1, offset
+ */
 element i_bleu_alias : assembler_alias(i_btype_branches)
 {
     use xpr_all as rs1, rs2;
@@ -823,10 +795,10 @@ element i_bleu_alias : assembler_alias(i_btype_branches)
     binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BGEU[9..7] simm[3..0] simm[10..10] BTYPE_BGEU[6..0]};
 };
 
-// /**
-//  * Branch if >= 0 (bgez) pseudo instruction
-//  * In RISCV, bgez rs1, offset equates to bge rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
-//  */
+/**
+ * Branch if >= 0 (bgez) pseudo instruction
+ * In RISCV, bgez rs1, offset equates to bge rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
+ */
 element i_bgez_alias : assembler_alias(i_btype_branches)
 {
     use xpr_all as rs1;
@@ -836,10 +808,10 @@ element i_bgez_alias : assembler_alias(i_btype_branches)
     binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BGE[9..7] simm[3..0] simm[10..10] BTYPE_BGE[6..0]};
 };
 
-// /**
-//  * Branch if rs1 <= rs2 (ble) pseudo instruction
-//  * In RISCV, ble rs1, rs2, offset equates to bge rs2, rs1, offset
-//  */
+/**
+ * Branch if rs1 <= rs2 (ble) pseudo instruction
+ * In RISCV, ble rs1, rs2, offset equates to bge rs2, rs1, offset
+ */
 element i_ble_alias : assembler_alias(i_btype_branches)
 {
     use xpr_all as rs1, rs2;
@@ -849,10 +821,10 @@ element i_ble_alias : assembler_alias(i_btype_branches)
     binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BGE[9..7] simm[3..0] simm[10..10] BTYPE_BGE[6..0]};
 };
 
-// /**
-//  * Branch if < 0 (bltz) pseudo instruction
-//  * In RISCV, bltz rs1, offset equates to blt rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
-//  */
+/**
+ * Branch if < 0 (bltz) pseudo instruction
+ * In RISCV, bltz rs1, offset equates to blt rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
+ */
 element i_blez_alias : assembler_alias(i_btype_branches)
 {
     use xpr_all as rs2;
@@ -862,10 +834,10 @@ element i_blez_alias : assembler_alias(i_btype_branches)
     binary {simm[11..11] simm[9..4] rs2 ZERO_REG BTYPE_BGE[9..7] simm[3..0] simm[10..10] BTYPE_BGE[6..0]};
 };
 
-// /**
-//  * Jump (j) pseudo instruction
-//  * In RISCV, j offset equates to jal x0, offset (x0 refers register 0 which also equates to the value 0)
-//  */
+/**
+ * Jump (j) pseudo instruction
+ * In RISCV, j offset equates to jal x0, offset (x0 refers register 0 which also equates to the value 0)
+ */
 element i_j_alias : assembler_alias(i_jtype_jlink)
 {
 
@@ -877,10 +849,10 @@ element i_j_alias : assembler_alias(i_jtype_jlink)
 };
 
 
-// /**
-//  * Jump Register (jr) pseudo instruction
-//  * In RISCV, jr rs equates to jalr x0, rs1, 0
-//  */
+/**
+ * Jump Register (jr) pseudo instruction
+ * In RISCV, jr rs equates to jalr x0, rs1, 0
+ */
 element i_jr_alias : assembler_alias(i_itype_jlreg)
 {
 
@@ -890,10 +862,10 @@ element i_jr_alias : assembler_alias(i_itype_jlreg)
     binary {ZERO_IMM12 rs1 ITYPE_JALR[9..7] ZERO_REG ITYPE_JALR[6..0]};
 };
 
-// /**
-//  * Return (ret) pseudo instruction
-//  * In RISCV, ret equates to jalr x0, ReturnReg, 0 (x0 refers register 0 which also equates to the value 0)
-//  */
+/**
+ * Return (ret) pseudo instruction
+ * In RISCV, ret equates to jalr x0, ReturnReg, 0 (x0 refers register 0 which also equates to the value 0)
+ */
 element i_ret_alias : assembler_alias(i_itype_jlreg), compiler_alias(i_itype_jlreg)
 {
     assembly {"ret"};
@@ -909,10 +881,10 @@ element i_ret_alias : assembler_alias(i_itype_jlreg), compiler_alias(i_itype_jlr
     };
 };
 
-// /**
-//  * Call (call) pseudo instruction
-//  * In RISCV, call offset equates to jal rd, offset (rd = return register)
-//  */
+/**
+ * Call (call) pseudo instruction
+ * In RISCV, call offset equates to jal rd, offset (rd = return register)
+ */
 element i_call_alias : assembler_alias(i_jtype_jlink), compiler_alias(i_jtype_jlink)
 {
     use relative_addr20 as simm;
@@ -937,10 +909,10 @@ element i_call_alias : assembler_alias(i_jtype_jlink), compiler_alias(i_jtype_jl
         }
     };
 };
-// /**
-//  * Call register (call_reg) pseudo instruction
-//  * In RISCV, call_reg rs  equates to jalr return_register, rs1, offset (offset = 0)
-//  */
+/**
+ * Call register (call_reg) pseudo instruction
+ * In RISCV, call_reg rs  equates to jalr return_register, rs1, offset (offset = 0)
+ */
 element i_call_reg_alias : assembler_alias(i_itype_jlreg), compiler_alias(i_itype_jlreg)
 {
     use xpr_all as rs1;
@@ -980,15 +952,36 @@ element i_jal_abs_calias : compiler_alias(i_jtype_jlink)
 };
 
 /**
+ * la (load address) pseudo instruction
+ *
+ * Similar to loading 32-bit data into a register, but load address
+ */
+
+/**
+ * The following instructions are emulated by combing a sequence of 2 or more RISCV instruction to provide the equivalent
+ * functionality of the desired instruction
+ */
+/*
+elemenla_alias : assembler_alias(i_utype_ops)
+{
+    use rel_addr32 as addr;
+    use xpr_all as dst;
+    assembly { "la" dst "," addr };
+    binary {
+        // 2. instruction
+        addr[11 .. 0] dst ITYPE_ADDI[9..7] dst ITYPE_ADDI[6..0]
+        // 1. instruction
+        addr[31 .. 12] dst UTYPE_AUIPC[6..0]
+    };
+};
+*/
+/**
  * e_movi32
  *
  * Emulation of a 32-bit immediate move.  With the RISCV32I instruction set being 32-bits wide and requiring an opcode
  * per instruction, a 32-bit immediate cannot be stored in a single instruction.  To perform this operation, it will need
  * to be emulate using a specific sequence of RISCV instructions per defined below.
  */
- //#####################################################Phase 2#################################################################
-// uncomment the following lines of code
- //######################################################################################################################
 emulation e_movi32
 {
 
@@ -1016,7 +1009,51 @@ emulation e_movi32
         rf_xpr_write(imm32, i_lui0.rd);
     };
 };
- //######################################################################################################################
+
+
+/**
+ * e_call_reg_imm
+ *
+ * Emulation of a 32-bit immediate long call.  The standard RISCV 32-bit un-conditional jump instructions do not have
+ * enough bits available in a 32-bit word to define a 32-bit immediate call function.  This operaion will require
+ * emulation using the
+ */
+//emulation e_call_reg_imm
+//{
+//
+//    use i_utype_ops as i_lui0, i_lui1;
+//    use i_rtype_alu as i_or;
+//    use i_imm_shift as i_srli;
+//    use i_itype_jlreg as i_jal_reg;
+//
+//    unsigned attribute bit[32] imm32;
+//
+//    instructions
+//    {
+//        // load upper 20-bits into the destination register
+//        i_lui0(opc = opc_lui, rd = x_30, imm = uimm20(value = imm32[31..12]));
+//        // bring tn the lower 12-bits into register reserved for emulation
+//        i_lui1(opc = opc_lui, rd = x_31, imm = uimm20(value = imm32[11..0]));
+//        // now, put the 12-bit immediate back into the lower 12-bits
+//        i_srli(opc = opc_srli, rd = i_lui1(rd), rs1 = i_lui1(rd), imm = uimm5(value = 12));
+//        // Us the OR instruction to combine the upper 20-bit immedate value stored in the destination register
+//        // with the now unsigned 12-bit immediate value saved in one of the emulation registers
+//        i_or(opc = opc_or, rd = i_lui0(rd), rs1 = i_lui0(rd), rs2 = i_srli(rd));
+//        // jump to register value of emulation register x31
+//        i_jal_reg(opc = opc_jalr, rd = x_1, simm = simm12(value = 0), rs1 = i_lui0(rd));
+//    };
+//
+//    semantics
+//    {
+////        rf_xpr_write(read_pc(), RETURN_ADDRESS);
+////        write_pc(imm32);
+//
+//        rf_xpr_write(r_pc, RETURN_ADDRESS);
+//        r_pc = imm32;
+//    };
+//};
+
+
 /**
  * To enable the Software Simulator, the following instructions are created.
  */
@@ -1040,6 +1077,27 @@ element i_halt
     };
 };
 
+/**
+ * SYSCALL enables the program to access c-based library routines for simulation purposes only
+ */
+//DEF_OPC(syscall, "syscall", JTYPE_SYSCALL)
+//
+//element i_syscall
+//{
+//    use opc_syscall as opc;
+//    assembly {opc};                                         // Assembly instruction will be "syscall"
+//    binary{0:bit[7] EMUL_REG_B 0:bit[13] OPCODE(opc)};        // Use reserved register Emulation_B for syscall
+//
+//    semantics
+//    {
+//        codasip_compiler_unused();
+//
+//        // Using a reserved register to pass the address of a structure that contains information about
+//        // the requested syscall.
+//
+//        codasip_syscall(rf_xpr_read(EMULATION_REG_B));
+//    };
+//};
 
 #if defined(OPTION_CSR_ENABLED)
 

@@ -57,35 +57,23 @@ uint32 load(const uint32 opc, const uint32 address)
     uint1 cache_resp;
 
     switch (opc){
-        case ITYPE_LW:           
-                //ADD value here
-            byte_count = 4;
-        case ITYPE_LB:              
-                //ADD value here
+        case ITYPE_LW:
+            byte_count = 4;         // a RISCV32I standard load is a 32-bit word or 4-bytes
+            break;
+        case ITYPE_LB:              // If the LB case statement is valid, it flows into the
+        case ITYPE_LBU:             // the LBU case statement
             byte_count = 1;
-        case ITYPE_LBU:             
-                //ADD value here
-            byte_count = 1;
-        case ITYPE_LH:           
-                //ADD value here
-            byte_count = 2;
+            break;
+        case ITYPE_LH:              // Halfword accesses is equivalent to 2-bytes
         case ITYPE_LHU:
-                //ADD value here
             byte_count = 2;
+            break;
         default:
             byte_count = 0;
-            eprintf("Default case: %d", opc);
+//            eprintf("Default case: %d", opc);
             break;
-   }
-//  //##################################################Phase 2####################################################################
-//Values to choose from (Phase 2)
-            //  byte_count = 1;
-            //break
-            //  byte_count = 2;
-            // break;
-            // byte_count = 4;         
-            // break;
- //######################################################################################################################
+    }
+
     // Data Interface read
 #ifdef OPTION_CACHES_ENABLED
     result = idcache.if_dcache.read(address, byte_count, cache_resp, pma_hprot(address, CP_AHB_DATA_ACCESS), CP_AHB_UNLOCK);
@@ -95,33 +83,20 @@ uint32 load(const uint32 opc, const uint32 address)
 #endif
     switch (opc) {
         case ITYPE_LB:
-         //ADD value here
-        return (int32)(int8) result;  
+            return (int32)(int8) result;        // sign extend a signed byte load operation
         case ITYPE_LH:
-         //ADD value here
-        return (int32)(int16) result;
+            return (int32)(int16) result;       // sign extend a signed halfword load operation
         case ITYPE_LBU:                         // Unsigned byte and halfword loads do not
-        //ADD value here
-        return result;
         case ITYPE_LHU:                         // require sign extension and can result in
-         //ADD value here
-        return result;
-         case ITYPE_LW:                          // immediate return
-         //ADD value here
-        return result;
+        case ITYPE_LW:                          // immediate return
+            return result;
         default:
             byte_count = 0;
-           eprintf("Default case: %d", opc);
+//            eprintf("Default case: %d", opc);
             return byte_count;
             break;
     }
 }
-//  //#####################################################Phase 2#################################################################
-//Values to choose from: (Phase 2)
- // return (int32)(int8) result;        // sign extend a signed byte load operation
-  // return (int32)(int16) result;       // sign extend a signed halfword load operation
-  // return result;
- //######################################################################################################################
 
 // A store function is developed to support the RISCV byte, halfword, and word load operations.  This function enables
 // the simulation of the memory subsystem
@@ -132,35 +107,20 @@ void store(const uint32 opc, const uint32 address, const uint32 result)
     uint1 cache_resp;
 
     switch (opc) {
-        case STYPE_SB:                     
-           //ADD value here
-           byte_count = 1;
-             break;
-        case STYPE_SH:                      
-          //ADD value here
-          byte_count = 2;
+        case STYPE_SB:                      // Number of bytes per store operation.  For SB, byte store, 1-byte operation
+            byte_count = 1;
+            break;
+        case STYPE_SH:                      // For SH, halfword store, 2-byte operation
+            byte_count = 2;
             break;
         case STYPE_SW:
-           //ADD value here
-           byte_count = 4;
+            byte_count = 4;                 // for SW, word store, 4-byte operation
             break;
         default:
             byte_count = 0;
-            eprintf("Default case: %d", opc);
+//            eprintf("Default case: %d", opc);
             break;
     }
- //#####################################################Phase 2#################################################################
-//Values to choose from: (Phase 2)
-
-//  byte_count = 1;
-//             break;
-//   byte_count = 2;
-// //             break;
-//  byte_count = 4;          
-//             break;
-//######################################################################################################################
-
-
 
     // Data interface write
 #ifdef OPTION_CACHES_ENABLED

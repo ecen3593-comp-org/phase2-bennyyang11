@@ -57,16 +57,16 @@
 #define FUNCT7_XOR     (0b0000000)
 #define FUNCT7_SLL     (0b0000000)
 #define FUNCT7_SRL     (0b0000000)
-#define FUNCT7_SUB     (0b1000000)
-#define FUNCT7_SRA     (0b1000000)
+#define FUNCT7_SUB     (0b0100000)
+#define FUNCT7_SRA     (0b0100000)
 
 // -------------------------------------------------------------
 // Funct3 definitions per extended opcode
 // -------------------------------------------------------------
 
- #define FUNCT3_SLLI    (0b001)
- #define FUNCT3_SRLI    (0b001)
- #define FUNCT3_SRAI    (0b001)
+#define FUNCT3_SLLI    (0b001)
+#define FUNCT3_SRLI    (0b101)
+#define FUNCT3_SRAI    (0b101)
 
 #define FUNCT3_ADD     (0b000)
 #define FUNCT3_SLT     (0b010)
@@ -80,31 +80,30 @@
 #define FUNCT3_SRA     (0b101)
 
 #define FUNCT3_ADDI    (0b000)
-#define FUNCT3_SLTI    (0b010) 
-#define FUNCT3_SLTIU   (0b011) 
-#define FUNCT3_ANDI    (0b111) 
-#define FUNCT3_ORI     (0b110) 
-#define FUNCT3_XORI    (0b100) 
+#define FUNCT3_SLTI    (0b010)
+#define FUNCT3_SLTIU   (0b011)
+#define FUNCT3_ANDI    (0b111)
+#define FUNCT3_ORI     (0b110)
+#define FUNCT3_XORI    (0b100)
 
- #define FUNCT3_BEQ     (0b000)
-#define FUNCT3_BNE     (0b001) 
-#define FUNCT3_BLT     (0b100) 
+#define FUNCT3_BEQ     (0b000)
+#define FUNCT3_BNE     (0b001)
+#define FUNCT3_BLT     (0b100)
 #define FUNCT3_BLTU    (0b110)
-#define FUNCT3_BGE     (0b101) 
-#define FUNCT3_BGEU    (0b111) 
+#define FUNCT3_BGE     (0b101)
+#define FUNCT3_BGEU    (0b111)
 
-#define FUNCT3_LB      (0b000) 
+#define FUNCT3_LB      (0b000)
 #define FUNCT3_LH      (0b001)
-#define FUNCT3_LW      (0b010) 
-#define FUNCT3_LBU     (0b100) 
-#define FUNCT3_LHU     (0b101) 
+#define FUNCT3_LW      (0b010)
+#define FUNCT3_LBU     (0b100)
+#define FUNCT3_LHU     (0b101)
 
-#define FUNCT3_SB      (0b000) 
-#define FUNCT3_SH      (0b001) 
-#define FUNCT3_SW      (0b010) 
+#define FUNCT3_SB      (0b000)
+#define FUNCT3_SH      (0b001)
+#define FUNCT3_SW      (0b010)
 
-#define FUNCT3_JALR    (0b000) 
-
+#define FUNCT3_JALR    (0b000)
 
 
 #define FUNCT3_CSRRW   (0b001)
@@ -118,7 +117,7 @@
 // opcode (bits 0:6)
 enum UTYPE_OPCODES : uint7 {
     UTYPE_LUI   = 0b0110111,
-    UTYPE_AUIPC = 0b0010111
+    UTYPE_AUIPC = 0b0010111 // assuming a different 7-bit opcode here; adjust as needed
 };
 
 
@@ -135,12 +134,11 @@ enum BTYPE_OPCODES : uint10 {
  //#####################################################Phase 2#################################################################
   //Uncomment lines and fill in the required values
    //######################################################################################################################
-    BTYPE_BNE   = (FUNCT3_BNE << 3) | OPCODE_BTYPE_BRANCHES,
-    BTYPE_BLT   = (FUNCT3_BLT << 3) | OPCODE_BTYPE_BRANCHES,
-    BTYPE_BGE   = (FUNCT3_BGE << 3) | OPCODE_BTYPE_BRANCHES,
-    BTYPE_BLTU  = (FUNCT3_BLTU << 3) | OPCODE_BTYPE_BRANCHES,
-    BTYPE_BGEU  = (FUNCT3_BGEU << 3) | OPCODE_BTYPE_BRANCHES
-
+    BTYPE_BNE   = (0b001 << 7) + 0b1100011,
+    BTYPE_BLT   = (0b100 << 7) + 0b1100011,
+    BTYPE_BGE   = (0b101 << 7) + 0b1100011,
+    BTYPE_BLTU  = (0b110 << 7) + 0b1100011,
+    BTYPE_BGEU  = (0b111 << 7) + 0b1100011,
 };
 
 // R-Type 2-argument Opcodes
@@ -151,16 +149,15 @@ enum RTYPE_OPCODES : uint17 {
     //#####################################################Phase 2#################################################################
   //Uncomment lines and fill in the required values
    //######################################################################################################################
-    RTYPE_SUB   = (FUNCT7_SUB << 10) | (FUNCT3_SUB << 3) | OPCODE_RTYPE_ALU,
-    RTYPE_SLL   = (FUNCT7_SLL << 10) | (FUNCT3_SLL << 3) | OPCODE_RTYPE_ALU,
-    RTYPE_SLT   = (FUNCT7_SLT << 10) | (FUNCT3_SLT << 3) | OPCODE_RTYPE_ALU,
-    RTYPE_SLTU  = (FUNCT7_SLTU << 10) | (FUNCT3_SLTU << 3) | OPCODE_RTYPE_ALU,
-    RTYPE_XOR   = (FUNCT7_XOR << 10) | (FUNCT3_XOR << 3) | OPCODE_RTYPE_ALU,
-    RTYPE_SRL   = (FUNCT7_SRL << 10) | (FUNCT3_SRL << 3) | OPCODE_RTYPE_ALU,
-    RTYPE_SRA   = (FUNCT7_SRA << 10) | (FUNCT3_SRA << 3) | OPCODE_RTYPE_ALU,
-    RTYPE_OR    = (FUNCT7_OR << 10) | (FUNCT3_OR << 3) | OPCODE_RTYPE_ALU,
-    RTYPE_AND   = (FUNCT7_AND << 10) | (FUNCT3_AND << 3) | OPCODE_RTYPE_ALU
-
+    RTYPE_SUB   = (0b0100000 << 10) + (0b000 << 7) + 0b0110011,
+    RTYPE_SLL   = (0b0000000 << 10) + (0b001 << 7) + 0b0110011,
+    RTYPE_SLT   = (0b0000000 << 10) + (0b010 << 7) + 0b0110011,
+    RTYPE_SLTU  = (0b0000000 << 10) + (0b011 << 7) + 0b0110011,
+    RTYPE_XOR   = (0b0000000 << 10) + (0b100 << 7) + 0b0110011,
+    RTYPE_SRL   = (0b0000000 << 10) + (0b101 << 7) + 0b0110011,
+    RTYPE_SRA   = (0b0100000 << 10) + (0b101 << 7) + 0b0110011,
+    RTYPE_OR    = (0b0000000 << 10) + (0b110 << 7) + 0b0110011,
+    RTYPE_AND   = (0b0000000 << 10) + (0b111 << 7) + 0b0110011,
 };
 
 // I-Type Immediate Opcodes (format)
@@ -170,18 +167,17 @@ enum ITYPE_OPCODES : uint10 {
     //#####################################################Phase 2#################################################################
   //Uncomment lines and fill in the required values
    //######################################################################################################################
-    ITYPE_SLTI   = (FUNCT3_SLTI << 3) | OPCODE_ITYPE_ALU,
-    ITYPE_SLTIU  = (FUNCT3_SLTIU << 3) | OPCODE_ITYPE_ALU,
-    ITYPE_XORI   = (FUNCT3_XORI << 3) | OPCODE_ITYPE_ALU,
-    ITYPE_ORI    = (FUNCT3_ORI << 3) | OPCODE_ITYPE_ALU,
-    ITYPE_ANDI   = (FUNCT3_ANDI << 3) | OPCODE_ITYPE_ALU,
-    ITYPE_JALR   = (FUNCT3_JALR << 3) | OPCODE_ITYPE_JALR,
-    ITYPE_LB     = (FUNCT3_LB << 3) | OPCODE_ITYPE_LOAD,
-    ITYPE_LH     = (FUNCT3_LH << 3) | OPCODE_ITYPE_LOAD,
-    ITYPE_LW     = (FUNCT3_LW << 3) | OPCODE_ITYPE_LOAD,
-    ITYPE_LBU    = (FUNCT3_LBU << 3) | OPCODE_ITYPE_LOAD,
-    ITYPE_LHU    = (FUNCT3_LHU << 3) | OPCODE_ITYPE_LOAD
-
+    ITYPE_SLTI  = (0b010 << 7) + 0b0010011,
+    ITYPE_SLTIU = (0b011 << 7) + 0b0010011,
+    ITYPE_XORI  = (0b100 << 7) + 0b0010011,
+    ITYPE_ORI   = (0b110 << 7) + 0b0010011,
+    ITYPE_ANDI  = (0b111 << 7) + 0b0010011,
+    ITYPE_JALR  = (0b000 << 7) + 0b1100111,
+    ITYPE_LB    = (0b000 << 7) + 0b0000011,
+    ITYPE_LH    = (0b001 << 7) + 0b0000011,
+    ITYPE_LW    = (0b010 << 7) + 0b0000011,
+    ITYPE_LBU   = (0b100 << 7) + 0b0000011,
+    ITYPE_LHU   = (0b101 << 7) + 0b0000011
 };
 
 // Immediate Shift Operations
@@ -192,9 +188,9 @@ enum ITYPE_OPCODES : uint10 {
   //Uncomment lines and fill in the required values
    //######################################################################################################################
 enum IMM_SHIFT_OPCODES : uint17 {
-    IMM_SHIFT_SLLI = (FUNCT7_SLLI << 10) | (FUNCT3_SLLI << 7) | OPCODE_IMM_SHIFT,
-    IMM_SHIFT_SRLI = (FUNCT7_SRLI << 10) | (FUNCT3_SRLI << 7) | OPCODE_IMM_SHIFT,
-    IMM_SHIFT_SRAI = (FUNCT7_SRAI << 10) | (FUNCT3_SRAI << 7) | OPCODE_IMM_SHIFT
+    IMM_SHIFT_SLLI = (0b0000000 << 10) + (0b001 << 7) + 0b0010011,  // FUNC7 is 0b0000000, FUNC3 is 0b001
+    IMM_SHIFT_SRLI = (0b0000000 << 10) + (0b101 << 7) + 0b0010011,  // FUNC7 is 0b0000000, FUNC3 is 0b101
+    IMM_SHIFT_SRAI = (0b0100000 << 10) + (0b101 << 7) + 0b0010011   // FUNC7 is 0b0100000, FUNC3 is 0b101
 };
 
 
@@ -204,10 +200,11 @@ enum IMM_SHIFT_OPCODES : uint17 {
   //Uncomment lines and fill in the required values
    //######################################################################################################################
 enum STYPE_OPCODES : uint10 {
-    STYPE_SB  = (FUNCT3_SB << 7) | OPCODE_STYPE,
-    STYPE_SH  = (FUNCT3_SH << 7) | OPCODE_STYPE,
-    STYPE_SW  = (FUNCT3_SW << 7) | OPCODE_STYPE
+    STYPE_SB = (0b000 << 7) + 0b0100011,  // FUNC3 is 0b000, OPCODE is 0b0100011
+    STYPE_SH = (0b001 << 7) + 0b0100011,  // FUNC3 is 0b001, OPCODE is 0b0100011
+    STYPE_SW = (0b010 << 7) + 0b0100011   // FUNC3 is 0b010, OPCODE is 0b0100011
 };
+
 
 // Miscellaneous Opcodes and associated func3 codes
 enum MISC10_OPCODES : uint10 {
