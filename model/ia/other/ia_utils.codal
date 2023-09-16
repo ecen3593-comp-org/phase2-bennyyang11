@@ -74,7 +74,7 @@ uint32 load(const uint32 opc, const uint32 address)
             byte_count = 2;
         default:
             byte_count = 0;
-//            eprintf("Default case: %d", opc);
+            eprintf("Default case: %d", opc);
             break;
    }
 //  //##################################################Phase 2####################################################################
@@ -96,17 +96,22 @@ uint32 load(const uint32 opc, const uint32 address)
     switch (opc) {
         case ITYPE_LB:
          //ADD value here
+        return (int32)(int8) result;  
         case ITYPE_LH:
          //ADD value here
+        return (int32)(int16) result;
         case ITYPE_LBU:                         // Unsigned byte and halfword loads do not
         //ADD value here
+        return result;
         case ITYPE_LHU:                         // require sign extension and can result in
          //ADD value here
+        return result;
          case ITYPE_LW:                          // immediate return
          //ADD value here
+        return result;
         default:
             byte_count = 0;
-//            eprintf("Default case: %d", opc);
+           eprintf("Default case: %d", opc);
             return byte_count;
             break;
     }
@@ -121,23 +126,29 @@ uint32 load(const uint32 opc, const uint32 address)
 // A store function is developed to support the RISCV byte, halfword, and word load operations.  This function enables
 // the simulation of the memory subsystem
 
-// void store(const uint32 opc, const uint32 address, const uint32 result)
-// {
-//     uint32 byte_count;
-//     uint1 cache_resp;
+void store(const uint32 opc, const uint32 address, const uint32 result)
+{
+    uint32 byte_count;
+    uint1 cache_resp;
 
-//     switch (opc) {
-//         case STYPE_SB:                     
-//            //ADD value here
-//         case STYPE_SH:                      
-//           //ADD value here
-//         case STYPE_SW:
-//            //ADD value here
-//         default:
-//             byte_count = 0;
-// //            eprintf("Default case: %d", opc);
-//             break;
-//     }
+    switch (opc) {
+        case STYPE_SB:                     
+           //ADD value here
+           byte_count = 1;
+             break;
+        case STYPE_SH:                      
+          //ADD value here
+          byte_count = 2;
+            break;
+        case STYPE_SW:
+           //ADD value here
+           byte_count = 4;
+            break;
+        default:
+            byte_count = 0;
+            eprintf("Default case: %d", opc);
+            break;
+    }
  //#####################################################Phase 2#################################################################
 //Values to choose from: (Phase 2)
 
@@ -152,14 +163,14 @@ uint32 load(const uint32 opc, const uint32 address)
 
 
     // Data interface write
-// #ifdef OPTION_CACHES_ENABLED
-//     idcache.if_dcache.write(result, address, byte_count, cache_resp, pma_hprot(address, CP_AHB_DATA_ACCESS), CP_AHB_UNLOCK);
-//     dprintf("st %08x -> [%08x] ", result, address);
-// #else
-//     ldst.write(result, address, byte_count, cache_resp, pma_hprot(address, CP_AHB_DATA_ACCESS), CP_AHB_UNLOCK);
-//     dprintf("st %08x -> [%08x] ", result, address);
-// #endif
-// }
+#ifdef OPTION_CACHES_ENABLED
+    idcache.if_dcache.write(result, address, byte_count, cache_resp, pma_hprot(address, CP_AHB_DATA_ACCESS), CP_AHB_UNLOCK);
+    dprintf("st %08x -> [%08x] ", result, address);
+#else
+    ldst.write(result, address, byte_count, cache_resp, pma_hprot(address, CP_AHB_DATA_ACCESS), CP_AHB_UNLOCK);
+    dprintf("st %08x -> [%08x] ", result, address);
+#endif
+}
 
 // To enable conditional branches and uniconditional jumps, there must be a function to obtain the current Program Counter (pc)
 // and a second function to update

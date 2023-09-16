@@ -50,15 +50,15 @@
   //Uncomment lines and fill in the required values
    //######################################################################################################################
 
-// #define FUNCT7_SLT     (//enter funct7 in binary here)
-// #define FUNCT7_SLTU    (//enter funct7 in binary here)
-// #define FUNCT7_AND     (//enter funct7 in binary here)
-// #define FUNCT7_OR      (//enter funct7 in binary here)
-// #define FUNCT7_XOR     (//enter funct7 in binary here)
-// #define FUNCT7_SLL     (//enter funct7 in binary here)
-// #define FUNCT7_SRL     (//enter funct7 in binary here)
-// #define FUNCT7_SUB     (//enter funct7 in binary here)
-// #define FUNCT7_SRA     (//enter funct7 in binary here)
+#define FUNCT7_SLT     (//enter funct7 in binary here)
+#define FUNCT7_SLTU    (//enter funct7 in binary here)
+#define FUNCT7_AND     (//enter funct7 in binary here)
+#define FUNCT7_OR      (//enter funct7 in binary here)
+#define FUNCT7_XOR     (//enter funct7 in binary here)
+#define FUNCT7_SLL     (//enter funct7 in binary here)
+#define FUNCT7_SRL     (//enter funct7 in binary here)
+#define FUNCT7_SUB     (//enter funct7 in binary here)
+#define FUNCT7_SRA     (//enter funct7 in binary here)
 
 // -------------------------------------------------------------
 // Funct3 definitions per extended opcode
