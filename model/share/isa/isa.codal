@@ -194,6 +194,38 @@ element i_rtype_alu           // define the instruction for the rtype arithmetic
                 result = src1 + src2;
                 break;
                 //ADD REMAINING OF INSTRUCTION SEMANTICS HERE
+                case RTYPE_SUB:
+                result = src1 - src2;
+                break;
+            case RTYPE_SLL:
+                result = src1 << src2;
+                break;
+            case RTYPE_SLT:
+                if (((int32) src1) < ((int32) src2)) result = 1;
+                else result = 0;
+                break;
+            case RTYPE_SLTU:
+                if (src1 < src2) result = 1;
+                else result = 0;
+                break;
+            case RTYPE_XOR:
+                result = src1 ^ src2;
+                break;
+            case RTYPE_SRL:
+                result = src1 >> (uint5) src2;
+                break;
+            case RTYPE_SRA:
+                result = (int32) src1 >> (uint5) src2;
+                break;
+            case RTYPE_OR:
+                result = src1 | src2;
+                break;
+            case RTYPE_AND:
+                result = src1 & src2;
+                break;
+            case RTYPE_MASK:
+                result = ~src1 & src2;
+                break;
             default:
                 result = 0;
 //                eprintf("Default case: %d", opc);
@@ -227,6 +259,28 @@ element i_shift_imm                     // define the instruction for the shift 
     semantics
     {
         //ADD SEMANTIC SECTION HERE
+        uint32 src1, immediate, result;
+
+        src1 = rf_xpr_read(rs1);
+        immediate = (uint5) imm;
+
+        switch (opc) {
+            case IMM_SHIFT_SLLI:
+                result = (uint32)src1 << immediate;
+                break;
+            case IMM_SHIFT_SRLI:
+                result = (uint32)src1 >> immediate;
+                break;
+            case IMM_SHIFT_SRAI:
+                result = ((int32) src1) >> immediate;
+                break;
+            default:
+                result = 0;
+              eprintf("Default case: %d", opc);
+                break;
+        }
+
+        rf_xpr_write(result, rd);
     };
 };
 
@@ -266,10 +320,27 @@ element i_itype_alu
             case ITYPE_ADDI:
                 result = src1 + immediate;
                 break;
-               //ADD REMAINING OF INSTRUCTION SEMANTICS HERE   
+               //ADD REMAINING OF INSTRUCTION SEMANTICS HERE  
+               case ITYPE_SLTI:
+                if ((int32)src1 < (int32)immediate) result = 1;
+                else result = 0;
+                break;
+            case ITYPE_SLTIU:
+                if ((uint32)src1 < ((uint32) (int32) immediate)) result = 1;
+                else result = 0;
+                break;
+            case ITYPE_XORI:
+                result = src1 ^ immediate;
+                break;
+            case ITYPE_ORI:
+                result = src1 | immediate;
+                break;
+            case ITYPE_ANDI:
+                result = src1 & immediate;
+                 break; 
             default:
                 result = 0;
-//                eprintf("Default case: %d", opc);
+                eprintf("Default case: %d", opc);
                 break;
         }
 
@@ -325,6 +396,28 @@ element i_stype_store
 
     semantics {
            //ADD SEMANTIC SECTION HERE
+           uint32 address, result;
+
+        address = rf_xpr_read(rs1) + (int32) simm;
+        result = rf_xpr_read(rs2);
+        store(opc, address, result);
+
+        #pragma simulator
+        {
+            if (address == SYSCALL_ADDRESS)
+            {
+                if (result == 1)
+                {
+                    codasip_store_exit_code(rf_xpr_read(FUNCTION_REG) & 0xFF) ;
+                    dprintf("exitcode = %d", rf_xpr_read(FUNCTION_REG) & 0xFF);
+                    codasip_halt();
+                }
+                else
+                {
+                    codasip_syscall(result);
+                }
+            }
+        }
        
     };
 };
@@ -351,6 +444,24 @@ element i_utype_ops
 
     semantics {
                 //ADD SEMANTIC SECTION HERE
+                uint32 result, current_pc;
+        result = 0;
+
+        switch (opc) {
+            case UTYPE_LUI:
+                result = (int32)imm << 12;
+                rf_xpr_write(result, rd);
+                break;
+            case UTYPE_AUIPC:
+                current_pc = read_pc() - RISCV_INSTR_SIZE;
+                result = current_pc + ((int32)imm << 12);
+                rf_xpr_write(result, rd);
+                break;
+            default:
+                result = 0;
+               eprintf("Default case: %d", opc);
+                break;
+        }
 
     };
 };
@@ -364,20 +475,7 @@ DEF_OPC(jal, "jal", JTYPE_JAL)
 
 set opc_jtype_jlink = opc_jal;
 
-element i_jtype_jlink
-{
-    use opc_jtype_jlink as opc;
-    use xpr_all as rd;
-    use relative_addr20 as simm;
-    assembly { opc rd "," simm};
-    binary { simm[19..19] simm[9..0] simm[10..10] simm[18..11] rd opc};
 
-    semantics {
-
-            //ADD SEMANTIC SECTION HERE
-      
-    };
-};
 
 // r-type jump and link register
 //#####################################################Phase 2#################################################################
@@ -397,6 +495,24 @@ element i_itype_jlreg
 
     semantics {
                 //ADD SEMANTIC SECTION HERE
+                uint32 result, current_pc;
+        result = 0;
+
+        switch (opc) {
+            case UTYPE_LUI:
+                result = (int32)imm << 12;
+                rf_xpr_write(result, rd);
+                break;
+            case UTYPE_AUIPC:
+                current_pc = read_pc() - RISCV_INSTR_SIZE;
+                result = current_pc + ((int32)imm << 12);
+                rf_xpr_write(result, rd);
+                break;
+            default:
+                result = 0;
+                eprintf("Default case: %d", opc);
+                break;
+        }
 //         
     };
 };
@@ -426,6 +542,44 @@ element i_btype_branches
 
     semantics {
                 //ADD SEMANTIC SECTION HERE
+                uint32 result, target_address;
+        uint32 src1, src2;
+
+        src1 = rf_xpr_read(rs1);
+        src2 = rf_xpr_read(rs2);
+
+        target_address = r_pc + (int32)imm - RISCV_INSTR_SIZE;
+
+// //
+// // Using the conditional expression ? to evaluate the branch conditional statement.  If true,
+// // set result to 1 and if false, set result to 0.  If the statement is true, then update pc with
+// // the branched address.
+// //
+        switch (opc) {
+            case BTYPE_BEQ:
+                result =  (src1 == src2) ? 1 : 0;
+                break;
+            case BTYPE_BNE:
+                result = (src1 != src2) ? 1 : 0;
+                break;
+            case BTYPE_BLT:
+                result = ((int32) src1 < (int32) src2) ? 1 : 0;
+                break;
+            case BTYPE_BGE:
+                result = ((int32) src1 >= (int32) src2) ? 1 : 0;
+                break;
+            case BTYPE_BLTU:
+                result = ((uint32) src1 < (uint32) src2) ? 1 : 0;
+                break;
+            case BTYPE_BGEU:
+                result = ((uint32) src1 >= (uint32) src2) ? 1 : 0;
+                break;
+            default:
+                result = 0;
+                eprintf("Default case: %d", opc);
+                break;
+        }
+        if (result) write_pc(target_address);
     };
 };
 
@@ -1154,22 +1308,22 @@ element i_csri_ops
             //     result = ~src1 & src2;
             //     break;
   //######################################################################################################################
-    //GROUP 9 //
-             // case ITYPE_SLTI:
-            //     if ((int32)src1 < (int32)immediate) result = 1;
-            //     else result = 0;
-            //     break;
-            // case ITYPE_SLTIU:
-            //     if ((uint32)src1 < ((uint32) (int32) immediate)) result = 1;
-            //     else result = 0;
-            //     break;
-            // case ITYPE_XORI:
-            //     result = src1 ^ immediate;
-            //     break;
-            // case ITYPE_ORI:
-            //     result = src1 | immediate;
-            //     break;
-            // case ITYPE_ANDI:
-            //     result = src1 & immediate;
-            //     break;
-     //######################################################################################################################
+    // GROUP 9 //
+    //          case ITYPE_SLTI:
+    //             if ((int32)src1 < (int32)immediate) result = 1;
+    //             else result = 0;
+    //             break;
+    //         case ITYPE_SLTIU:
+    //             if ((uint32)src1 < ((uint32) (int32) immediate)) result = 1;
+    //             else result = 0;
+    //             break;
+    //         case ITYPE_XORI:
+    //             result = src1 ^ immediate;
+    //             break;
+    //         case ITYPE_ORI:
+    //             result = src1 | immediate;
+    //             break;
+    //         case ITYPE_ANDI:
+    //             result = src1 & immediate;
+    //             break;
+    //  ######################################################################################################################
