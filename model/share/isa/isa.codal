@@ -50,48 +50,48 @@
  //######################################################################################################################
 
 set isa = i_rtype_alu,
-    //  i_shift_imm,
+      i_shift_imm,
     i_itype_alu,
-//     i_itype_loads,
-//     i_stype_store,
-//     i_utype_ops,
-//     i_jtype_jlink,
-//     i_itype_jlreg,
-//     i_btype_branches,
-// #if defined(OPTION_CSR_ENABLED)
-//     i_csr_ops,
-//     i_csri_ops,
-// #endif
+     i_itype_loads,
+     i_stype_store,
+     i_utype_ops,
+     i_jtype_jlink,
+     i_itype_jlreg,
+     i_btype_branches,
+ #if defined(OPTION_CSR_ENABLED)
+     i_csr_ops,
+     i_csri_ops,
+ #endif
      i_nop_alias,
-//     i_li_alias,     // Action Item:  upgrade to support 32-bit immediates
-//     i_mv_alias,
-//     i_not_alias,
-//     i_neg_alias,
-//     i_seqz_alias,
-//     i_snez_alias,
-//     i_sltz_alias,
-//     i_sgtz_alias,
-//     i_sgt_alias,
-//     i_beqz_alias,
-//     i_bnez_alias,
-//     i_blez_alias,
-//     i_bltz_alias,
-//     i_bgez_alias,
-//     i_bgtz_alias,
-//     i_bgt_alias,
-//     i_ble_alias,
-//     i_bgtu_alias,
-//     i_bleu_alias,
-//     i_j_alias,
-//     i_jr_alias,
-//     i_ret_alias,
-//     i_call_alias,
-// //    i_la_alias,
-//     i_call_reg_alias,
-//     i_jal_abs_calias,
+     i_li_alias,     // Action Item:  upgrade to support 32-bit immediates
+     i_mv_alias,
+     i_not_alias,
+     i_neg_alias,
+     i_seqz_alias,
+     i_snez_alias,
+     i_sltz_alias,
+     i_sgtz_alias,
+     i_sgt_alias,
+     i_beqz_alias,
+     i_bnez_alias,
+     i_blez_alias,
+     i_bltz_alias,
+     i_bgez_alias,
+     i_bgtz_alias,
+     i_bgt_alias,
+     i_ble_alias,
+     i_bgtu_alias,
+     i_bleu_alias,
+     i_j_alias,
+     i_jr_alias,
+     i_ret_alias,
+     i_call_alias,
+ //    i_la_alias,
+     i_call_reg_alias,
+     i_jal_abs_calias,
      i_halt;              // i_halt and i_syscall are special function reserved for Codasip Studio simulation
 
-//   set e_isa = e_movi32;
+   set e_isa = e_movi32;
 
 // -------------------------------------------------------------------------------------------------
 // Start section
@@ -138,16 +138,16 @@ DEF_OPC(add, "add", RTYPE_ADD)
 //uncomment the folowing code
  //######################################################################################################################
 
-// DEF_OPC(sub, "sub", RTYPE_SUB)
-// DEF_OPC(sll, "sll", RTYPE_SLL)
-// DEF_OPC(slt, "slt", RTYPE_SLT)
-// DEF_OPC(sltu, "sltu", RTYPE_SLTU)
-// DEF_OPC(xor, "xor", RTYPE_XOR)
-// DEF_OPC(srl, "srl", RTYPE_SRL)
-// DEF_OPC(sra, "sra", RTYPE_SRA)
-// DEF_OPC(or, "or", RTYPE_OR)
-// DEF_OPC(and, "and", RTYPE_AND)
-// DEF_OPC(mask, "mask", RTYPE_MASK)
+DEF_OPC(sub, "sub", RTYPE_SUB)
+DEF_OPC(sll, "sll", RTYPE_SLL)
+DEF_OPC(slt, "slt", RTYPE_SLT)
+DEF_OPC(sltu, "sltu", RTYPE_SLTU)
+DEF_OPC(xor, "xor", RTYPE_XOR)
+DEF_OPC(srl, "srl", RTYPE_SRL)
+DEF_OPC(sra, "sra", RTYPE_SRA)
+DEF_OPC(or, "or", RTYPE_OR)
+DEF_OPC(and, "and", RTYPE_AND)
+DEF_OPC(mask, "mask", RTYPE_MASK)
 
  //#####################################################Phase 2#################################################################
 // uncomment the instructions after the opc_add
@@ -210,36 +210,36 @@ element i_rtype_alu           // define the instruction for the rtype arithmetic
 // uncomment the following lines of code
  //######################################################################################################################
 
-// DEF_OPC(slli, "slli", IMM_SHIFT_SLLI)
-// DEF_OPC(srli, "srli", IMM_SHIFT_SRLI)
-// DEF_OPC(srai, "srai", IMM_SHIFT_SRAI)
+DEF_OPC(slli, "slli", IMM_SHIFT_SLLI)
+DEF_OPC(srli, "srli", IMM_SHIFT_SRLI)
+DEF_OPC(srai, "srai", IMM_SHIFT_SRAI)
 
-// set opc_shift_imm = opc_slli, opc_srli, opc_srai;
+set opc_shift_imm = opc_slli, opc_srli, opc_srai;
 
-// element i_shift_imm                     // define the instruction for the shift immediate opcodes
-// {
-//     use opc_shift_imm as opc;
-//     use xpr_all as rs1, rd;
-//     use uimm5 as imm;
-//     assembly { opc rd "," rs1 "," imm};
-//     binary { FUNC7(opc) imm rs1 FUNC3(opc) rd OPCODE(opc)};
+element i_shift_imm                     // define the instruction for the shift immediate opcodes
+{
+    use opc_shift_imm as opc;
+    use xpr_all as rs1, rd;
+    use uimm5 as imm;
+    assembly { opc rd "," rs1 "," imm};
+    binary { FUNC7(opc) imm rs1 FUNC3(opc) rd OPCODE(opc)};
 
-//     semantics
-//     {
-//         //ADD SEMANTIC SECTION HERE
-//     };
-// };
+    semantics
+    {
+        //ADD SEMANTIC SECTION HERE
+    };
+};
 
 // combine all the i-type arithmetic operations
 DEF_OPC(addi, "addi", ITYPE_ADDI)
  //#####################################################Phase 2#################################################################
 // uncomment the following lines of code
  //######################################################################################################################
-// DEF_OPC(slti, "slti", ITYPE_SLTI)
-// DEF_OPC(sltiu, "sltiu", ITYPE_SLTIU)
-// DEF_OPC(xori, "xori", ITYPE_XORI)
-// DEF_OPC(ori, "ori", ITYPE_ORI)
-// DEF_OPC(andi, "andi", ITYPE_ANDI)
+DEF_OPC(slti, "slti", ITYPE_SLTI)
+DEF_OPC(sltiu, "sltiu", ITYPE_SLTIU)
+DEF_OPC(xori, "xori", ITYPE_XORI)
+DEF_OPC(ori, "ori", ITYPE_ORI)
+DEF_OPC(andi, "andi", ITYPE_ANDI)
  //#####################################################Phase 2#################################################################
 // uncomment the instructions after the opc_addi
  //######################################################################################################################
@@ -283,51 +283,51 @@ element i_itype_alu
 // uncomment the following lines of code
  //#####################################################################################################################
 
-// DEF_OPC (lb, "lb", ITYPE_LB)
-// DEF_OPC (lh, "lh", ITYPE_LH)
-// DEF_OPC (lw, "lw", ITYPE_LW)
-// DEF_OPC (lbu, "lbu", ITYPE_LBU)
-// DEF_OPC (lhu, "lhu", ITYPE_LHU)
+DEF_OPC (lb, "lb", ITYPE_LB)
+DEF_OPC (lh, "lh", ITYPE_LH)
+DEF_OPC (lw, "lw", ITYPE_LW)
+DEF_OPC (lbu, "lbu", ITYPE_LBU)
+DEF_OPC (lhu, "lhu", ITYPE_LHU)
 
-// set opc_itype_loads = opc_lb, opc_lh, opc_lw, opc_lbu, opc_lhu;
+set opc_itype_loads = opc_lb, opc_lh, opc_lw, opc_lbu, opc_lhu;
 
-// element i_itype_loads
-// {
-//     use opc_itype_loads as opc;
-//     use xpr_all as rs1, rd;
-//     use simm12 as simm;
-//     assembly { opc rd "," simm "(" rs1 ")"};
-//     binary { simm rs1 FUNC3(opc) rd OPCODE(opc)};
+element i_itype_loads
+{
+    use opc_itype_loads as opc;
+    use xpr_all as rs1, rd;
+    use simm12 as simm;
+    assembly { opc rd "," simm "(" rs1 ")"};
+    binary { simm rs1 FUNC3(opc) rd OPCODE(opc)};
 
-//      semantics {
-//         //ADD SEMANTIC SECTION HERE
-//     };
-// };
+     semantics {
+        //ADD SEMANTIC SECTION HERE
+    };
+};
 
 // combine all the s-type store instructions
 //#####################################################Phase 2#################################################################
 // uncomment the following lines of code
  //######################################################################################################################
 
-// DEF_OPC(sb, "sb", STYPE_SB)
-// DEF_OPC(sh, "sh", STYPE_SH)
-// DEF_OPC(sw, "sw", STYPE_SW)
+DEF_OPC(sb, "sb", STYPE_SB)
+DEF_OPC(sh, "sh", STYPE_SH)
+DEF_OPC(sw, "sw", STYPE_SW)
 
-// set opc_stype_store = opc_sb, opc_sh, opc_sw;
+set opc_stype_store = opc_sb, opc_sh, opc_sw;
 
-// element i_stype_store
-// {
-//     use opc_stype_store as opc;
-//     use xpr_all as rs1, rs2;
-//     use simm12 as simm;
-//     assembly { opc rs2 "," simm "(" rs1 ")"};
-//     binary { simm[11..5] rs2 rs1 FUNC3(opc) simm[4..0] OPCODE(opc)};
+element i_stype_store
+{
+    use opc_stype_store as opc;
+    use xpr_all as rs1, rs2;
+    use simm12 as simm;
+    assembly { opc rs2 "," simm "(" rs1 ")"};
+    binary { simm[11..5] rs2 rs1 FUNC3(opc) simm[4..0] OPCODE(opc)};
 
-//     semantics {
-//            //ADD SEMANTIC SECTION HERE
+    semantics {
+           //ADD SEMANTIC SECTION HERE
        
-//     };
-// };
+    };
+};
 
 // combine all the u-type jump instructions
 
@@ -335,7 +335,7 @@ DEF_OPC(lui, "lui", UTYPE_LUI)
 //#####################################################Phase 2#################################################################
 // uncomment the following lines of code
  //#####################################################################################################################
-// DEF_OPC(auipc, "auipc", UTYPE_AUIPC)
+DEF_OPC(auipc, "auipc", UTYPE_AUIPC)
 //#####################################################Phase 2#################################################################
 // uncomment the other instruction after opc_lui
  //######################################################################################################################
@@ -360,74 +360,74 @@ element i_utype_ops
 // uncomment the following lines of code
  //######################################################################################################################
 
-// DEF_OPC(jal, "jal", JTYPE_JAL)
+DEF_OPC(jal, "jal", JTYPE_JAL)
 
-// set opc_jtype_jlink = opc_jal;
+set opc_jtype_jlink = opc_jal;
 
-// element i_jtype_jlink
-// {
-//     use opc_jtype_jlink as opc;
-//     use xpr_all as rd;
-//     use relative_addr20 as simm;
-//     assembly { opc rd "," simm};
-//     binary { simm[19..19] simm[9..0] simm[10..10] simm[18..11] rd opc};
+element i_jtype_jlink
+{
+    use opc_jtype_jlink as opc;
+    use xpr_all as rd;
+    use relative_addr20 as simm;
+    assembly { opc rd "," simm};
+    binary { simm[19..19] simm[9..0] simm[10..10] simm[18..11] rd opc};
 
-//     semantics {
+    semantics {
 
-//             //ADD SEMANTIC SECTION HERE
+            //ADD SEMANTIC SECTION HERE
       
-//     };
-// };
+    };
+};
 
 // r-type jump and link register
 //#####################################################Phase 2#################################################################
 // uncomment the following lines of code
  //######################################################################################################################
-//  DEF_OPC(jalr, "jalr", ITYPE_JALR)
+ DEF_OPC(jalr, "jalr", ITYPE_JALR)
 
-// set opc_itype_jlreg = opc_jalr;
+set opc_itype_jlreg = opc_jalr;
 
-// element i_itype_jlreg
-// {
-//     use opc_itype_jlreg as opc;
-//     use xpr_all as rd, rs1;
-//     use simm12 as simm;
-//     assembly { opc rd "," simm "(" rs1 ")"};
-//     binary { simm  rs1 FUNC3(opc) rd OPCODE(opc)};
+element i_itype_jlreg
+{
+    use opc_itype_jlreg as opc;
+    use xpr_all as rd, rs1;
+    use simm12 as simm;
+    assembly { opc rd "," simm "(" rs1 ")"};
+    binary { simm  rs1 FUNC3(opc) rd OPCODE(opc)};
 
-//     semantics {
-//                 //ADD SEMANTIC SECTION HERE
-// //         
-//     };
-// };
+    semantics {
+                //ADD SEMANTIC SECTION HERE
+//         
+    };
+};
 
 // Combine b-type conditional branch instructions
 //#####################################################Phase 2#################################################################
 // uncomment the following lines of code
  //######################################################################################################################
-// DEF_OPC(beq, "beq", BTYPE_BEQ)
-// DEF_OPC(bne, "bne", BTYPE_BNE)
-// DEF_OPC(blt, "blt", BTYPE_BLT)
-// DEF_OPC(bge, "bge", BTYPE_BGE)
-// DEF_OPC(bltu, "bltu", BTYPE_BLTU)
-// DEF_OPC(bgeu, "bgeu", BTYPE_BGEU)
+DEF_OPC(beq, "beq", BTYPE_BEQ)
+DEF_OPC(bne, "bne", BTYPE_BNE)
+DEF_OPC(blt, "blt", BTYPE_BLT)
+DEF_OPC(bge, "bge", BTYPE_BGE)
+DEF_OPC(bltu, "bltu", BTYPE_BLTU)
+DEF_OPC(bgeu, "bgeu", BTYPE_BGEU)
 
-// set opc_btype_branches = opc_beq, opc_bne, opc_blt, opc_bge, opc_bltu, opc_bgeu;
-
-
-// element i_btype_branches
-// {
-//     use opc_btype_branches as opc;
-//     use xpr_all as rs1, rs2;
-//     use relative_addr12 as imm;
-//     assembly { opc rs1 "," rs2 "," imm };
-//     binary { imm[11..11] imm[9..4] rs2 rs1 FUNC3(opc) imm[3..0] imm[10..10] OPCODE(opc)};
+set opc_btype_branches = opc_beq, opc_bne, opc_blt, opc_bge, opc_bltu, opc_bgeu;
 
 
-//     semantics {
-//                 //ADD SEMANTIC SECTION HERE
-//     };
-// };
+element i_btype_branches
+{
+    use opc_btype_branches as opc;
+    use xpr_all as rs1, rs2;
+    use relative_addr12 as imm;
+    assembly { opc rs1 "," rs2 "," imm };
+    binary { imm[11..11] imm[9..4] rs2 rs1 FUNC3(opc) imm[3..0] imm[10..10] OPCODE(opc)};
+
+
+    semantics {
+                //ADD SEMANTIC SECTION HERE
+    };
+};
 
 /**
  * To ease programming, it is beneficial to have additional instructions that are not included in the Instruction
@@ -497,333 +497,333 @@ element i_mv_alias : assembler_alias(i_itype_alu)
  * NOT (not) pseudo instruction
  * In RISCV, not rd, rs equates to xori rd, rs1, -1
  */
-// element i_not_alias : assembler_alias(i_itype_alu)
-// {
-//     use xpr_all as rd, rs1;
+element i_not_alias : assembler_alias(i_itype_alu)
+{
+    use xpr_all as rd, rs1;
 
-//     assembly {"not" rd "," rs1};
-//     binary {MINUS_ONE_IMM12 rs1 ITYPE_XORI[9..7] rd ITYPE_XORI[6..0]};
-// };
+    assembly {"not" rd "," rs1};
+    binary {MINUS_ONE_IMM12 rs1 ITYPE_XORI[9..7] rd ITYPE_XORI[6..0]};
+};
 
 /**
  * NEG (neg) pseudo instruction
  * In RISCV, neg rd, rs equates to sub rd, x0, rs2  (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_neg_alias : assembler_alias(i_rtype_alu)
-// {
-//     use xpr_all as rd, rs2;
+element i_neg_alias : assembler_alias(i_rtype_alu)
+{
+    use xpr_all as rd, rs2;
 
-//     assembly {"neg" rd "," rs2};
-//     binary {RTYPE_SUB[16..10] rs2 ZERO_REG RTYPE_SUB[9..7] rd RTYPE_SUB[6..0]};
-// };
+    assembly {"neg" rd "," rs2};
+    binary {RTYPE_SUB[16..10] rs2 ZERO_REG RTYPE_SUB[9..7] rd RTYPE_SUB[6..0]};
+};
 
 // /**
 //  * Set if = zero (seqz) pseudo instruction
 //  * In RISCV, seqz rd, rs equates to sltiu rd, rs1, 1
 //  */
-// element i_seqz_alias : assembler_alias(i_itype_alu)
-// {
-//     use xpr_all as rd, rs1;
+element i_seqz_alias : assembler_alias(i_itype_alu)
+{
+    use xpr_all as rd, rs1;
 
-//     assembly {"seqz" rd "," rs1};
-//     binary {ONE_IMM12 rs1 ITYPE_SLTIU[9..7] rd ITYPE_SLTIU[6..0]};
-// };
+    assembly {"seqz" rd "," rs1};
+    binary {ONE_IMM12 rs1 ITYPE_SLTIU[9..7] rd ITYPE_SLTIU[6..0]};
+};
 
 // /**
 //  * Set if |= zero (snez) pseudo instruction
 //  * In RISCV, snez rd, rs equates to sltu rd, x0, rs2  (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_snez_alias : assembler_alias(i_rtype_alu)
-// {
-//     use xpr_all as rd, rs2;
+element i_snez_alias : assembler_alias(i_rtype_alu)
+{
+    use xpr_all as rd, rs2;
 
-//     assembly {"snez" rd "," rs2};
-//     binary {RTYPE_SLTU[16..10] rs2 ZERO_REG RTYPE_SLTU[9..7] rd RTYPE_SLTU[6..0]};
-// };
+    assembly {"snez" rd "," rs2};
+    binary {RTYPE_SLTU[16..10] rs2 ZERO_REG RTYPE_SLTU[9..7] rd RTYPE_SLTU[6..0]};
+};
 
 // /**
 //  * Set if < zero (sltz) pseudo instruction
 //  * In RISCV, sltz rd, rs equates to slt rd, rs1, x0  (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_sltz_alias : assembler_alias(i_rtype_alu)
-// {
-//     use xpr_all as rd, rs1;
+element i_sltz_alias : assembler_alias(i_rtype_alu)
+{
+    use xpr_all as rd, rs1;
 
-//     assembly {"sltz" rd "," rs1};
-//     binary {RTYPE_SLT[16..10] ZERO_REG rs1 RTYPE_SLT[9..7] rd RTYPE_SLT[6..0]};
-// };
+    assembly {"sltz" rd "," rs1};
+    binary {RTYPE_SLT[16..10] ZERO_REG rs1 RTYPE_SLT[9..7] rd RTYPE_SLT[6..0]};
+};
 
 // /**
 //  * Set if > zero (sgtz) pseudo instruction
 //  * In RISCV, sgtz rd, rs equates to slt rd, x0, rs2  (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_sgtz_alias : assembler_alias(i_rtype_alu)
-// {
-//     use xpr_all as rd, rs2;
+element i_sgtz_alias : assembler_alias(i_rtype_alu)
+{
+    use xpr_all as rd, rs2;
 
-//     assembly {"sgtz" rd "," rs2};
-//     binary {RTYPE_SLT[16..10] rs2 ZERO_REG RTYPE_SLT[9..7] rd RTYPE_SLT[6..0]};
-// };
+    assembly {"sgtz" rd "," rs2};
+    binary {RTYPE_SLT[16..10] rs2 ZERO_REG RTYPE_SLT[9..7] rd RTYPE_SLT[6..0]};
+};
 
 // /**
 //  * Set if rs1 > rs2 (setge) pseudo instruction
 //  * In RISCV, setge rd, rs1, rs2 equstes to slt rd, rs2, rs1
 //  */
 
-// element i_sgt_alias : assembler_alias(i_rtype_alu)
-// {
-//     use xpr_all as rd, rs1, rs2;
-//     assembly {"sgt" rd "," rs2 "," rs1};
-//     binary {RTYPE_SLT[16..10] rs2 rs1 RTYPE_SLT[9..7] rd RTYPE_SLT[6..0]};
+element i_sgt_alias : assembler_alias(i_rtype_alu)
+{
+    use xpr_all as rd, rs1, rs2;
+    assembly {"sgt" rd "," rs2 "," rs1};
+    binary {RTYPE_SLT[16..10] rs2 rs1 RTYPE_SLT[9..7] rd RTYPE_SLT[6..0]};
 
-// };
+};
 
 // /**
 //  * Branch if = 0 (beqz) pseudo instruction
 //  * In RISCV, beqz rs1, offset equates to beq rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_beqz_alias : assembler_alias(i_btype_branches)
-// {
-//     use xpr_all as rs1;
-//     use relative_addr12 as simm;
+element i_beqz_alias : assembler_alias(i_btype_branches)
+{
+    use xpr_all as rs1;
+    use relative_addr12 as simm;
 
-//     assembly {"beqz" rs1 "," simm};
-//     binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BEQ[9..7] simm[3..0] simm[10..10] BTYPE_BEQ[6..0]};
-// };
+    assembly {"beqz" rs1 "," simm};
+    binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BEQ[9..7] simm[3..0] simm[10..10] BTYPE_BEQ[6..0]};
+};
 
 // /**
 //  * Branch if != 0 (bnez) pseudo instruction
 //  * In RISCV, bnez rs1, offset equates to bne rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_bnez_alias : assembler_alias(i_btype_branches)
-// {
-//     use xpr_all as rs1;
-//     use relative_addr12 as simm;
+element i_bnez_alias : assembler_alias(i_btype_branches)
+{
+    use xpr_all as rs1;
+    use relative_addr12 as simm;
 
-//     assembly {"bnez" rs1 "," simm};
-//     binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BNE[9..7] simm[3..0] simm[10..10] BTYPE_BNE[6..0]};
-// };
+    assembly {"bnez" rs1 "," simm};
+    binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BNE[9..7] simm[3..0] simm[10..10] BTYPE_BNE[6..0]};
+};
 
 // /**
 //  * Branch if < 0 (bltz) pseudo instruction
 //  * In RISCV, bltz rs1, offset equates to blt rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_bltz_alias : assembler_alias(i_btype_branches)
-// {
-//     use xpr_all as rs1;
-//     use relative_addr12 as simm;
+element i_bltz_alias : assembler_alias(i_btype_branches)
+{
+    use xpr_all as rs1;
+    use relative_addr12 as simm;
 
-//     assembly {"bltz" rs1 "," simm};
-//     binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BLT[9..7] simm[3..0] simm[10..10] BTYPE_BLT[6..0]};
-// };
+    assembly {"bltz" rs1 "," simm};
+    binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BLT[9..7] simm[3..0] simm[10..10] BTYPE_BLT[6..0]};
+};
 
 // /**
 //  * Branch if > 0 (bgtz) pseudo instruction
 //  * In RISCV, bgtz rs1, offset equates to blt x0, rs2, offset (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_bgtz_alias : assembler_alias(i_btype_branches)
-// {
-//     use xpr_all as rs2;
-//     use relative_addr12 as simm;
+element i_bgtz_alias : assembler_alias(i_btype_branches)
+{
+    use xpr_all as rs2;
+    use relative_addr12 as simm;
 
-//     assembly {"bgtz" rs2 "," simm};
-//     binary {simm[11..11] simm[9..4] rs2 ZERO_REG BTYPE_BLT[9..7] simm[3..0] simm[10..10] BTYPE_BLT[6..0]};
-// };
+    assembly {"bgtz" rs2 "," simm};
+    binary {simm[11..11] simm[9..4] rs2 ZERO_REG BTYPE_BLT[9..7] simm[3..0] simm[10..10] BTYPE_BLT[6..0]};
+};
 
 // /**
 //  * Branch if rs1 > rs2 (bgt) pseudo instruction
 //  * In RISCV, bgt rs1, rs2, offset equates to blt rs2, rs1, offset
 //  */
-// element i_bgt_alias : assembler_alias(i_btype_branches)
-// {
-//     use xpr_all as rs1, rs2;
-//     use relative_addr12 as simm;
+element i_bgt_alias : assembler_alias(i_btype_branches)
+{
+    use xpr_all as rs1, rs2;
+    use relative_addr12 as simm;
 
-//     assembly {"bgt" rs2 "," rs1 "," simm};
-//     binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BLT[9..7] simm[3..0] simm[10..10] BTYPE_BLT[6..0]};
-// };
+    assembly {"bgt" rs2 "," rs1 "," simm};
+    binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BLT[9..7] simm[3..0] simm[10..10] BTYPE_BLT[6..0]};
+};
 
 // /**
 //  * Branch if rs1 > rs2 unsigned (bgtu) pseudo instruction
 //  * In RISCV, ble rs1, rs2, offset equates to bltu rs2, rs1, offset
 //  */
-// element i_bgtu_alias : assembler_alias(i_btype_branches)
-// {
-//     use xpr_all as rs1, rs2;
-//     use relative_addr12 as simm;
+element i_bgtu_alias : assembler_alias(i_btype_branches)
+{
+    use xpr_all as rs1, rs2;
+    use relative_addr12 as simm;
 
-//     assembly {"bgtu" rs2 "," rs1 "," simm};
-//     binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BLTU[9..7] simm[3..0] simm[10..10] BTYPE_BLTU[6..0]};
-// };
+    assembly {"bgtu" rs2 "," rs1 "," simm};
+    binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BLTU[9..7] simm[3..0] simm[10..10] BTYPE_BLTU[6..0]};
+};
 
 // /**
 //  * Branch if rs1 <= rs2 unsigned (bleu) pseudo instruction
 //  * In RISCV, ble rs1, offset equates to bgeu rs2, rs1, offset
 //  */
-// element i_bleu_alias : assembler_alias(i_btype_branches)
-// {
-//     use xpr_all as rs1, rs2;
-//     use relative_addr12 as simm;
+element i_bleu_alias : assembler_alias(i_btype_branches)
+{
+    use xpr_all as rs1, rs2;
+    use relative_addr12 as simm;
 
-//     assembly {"bleu" rs2 "," rs1 "," simm};
-//     binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BGEU[9..7] simm[3..0] simm[10..10] BTYPE_BGEU[6..0]};
-// };
+    assembly {"bleu" rs2 "," rs1 "," simm};
+    binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BGEU[9..7] simm[3..0] simm[10..10] BTYPE_BGEU[6..0]};
+};
 
 // /**
 //  * Branch if >= 0 (bgez) pseudo instruction
 //  * In RISCV, bgez rs1, offset equates to bge rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_bgez_alias : assembler_alias(i_btype_branches)
-// {
-//     use xpr_all as rs1;
-//     use relative_addr12 as simm;
+element i_bgez_alias : assembler_alias(i_btype_branches)
+{
+    use xpr_all as rs1;
+    use relative_addr12 as simm;
 
-//     assembly {"bgez" rs1 "," simm};
-//     binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BGE[9..7] simm[3..0] simm[10..10] BTYPE_BGE[6..0]};
-// };
+    assembly {"bgez" rs1 "," simm};
+    binary {simm[11..11] simm[9..4] ZERO_REG rs1 BTYPE_BGE[9..7] simm[3..0] simm[10..10] BTYPE_BGE[6..0]};
+};
 
 // /**
 //  * Branch if rs1 <= rs2 (ble) pseudo instruction
 //  * In RISCV, ble rs1, rs2, offset equates to bge rs2, rs1, offset
 //  */
-// element i_ble_alias : assembler_alias(i_btype_branches)
-// {
-//     use xpr_all as rs1, rs2;
-//     use relative_addr12 as simm;
+element i_ble_alias : assembler_alias(i_btype_branches)
+{
+    use xpr_all as rs1, rs2;
+    use relative_addr12 as simm;
 
-//     assembly {"ble" rs2 "," rs1 "," simm};
-//     binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BGE[9..7] simm[3..0] simm[10..10] BTYPE_BGE[6..0]};
-// };
+    assembly {"ble" rs2 "," rs1 "," simm};
+    binary {simm[11..11] simm[9..4] rs2 rs1 BTYPE_BGE[9..7] simm[3..0] simm[10..10] BTYPE_BGE[6..0]};
+};
 
 // /**
 //  * Branch if < 0 (bltz) pseudo instruction
 //  * In RISCV, bltz rs1, offset equates to blt rs1, x0, offset (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_blez_alias : assembler_alias(i_btype_branches)
-// {
-//     use xpr_all as rs2;
-//     use relative_addr12 as simm;
+element i_blez_alias : assembler_alias(i_btype_branches)
+{
+    use xpr_all as rs2;
+    use relative_addr12 as simm;
 
-//     assembly {"blez" rs2 "," simm};
-//     binary {simm[11..11] simm[9..4] rs2 ZERO_REG BTYPE_BGE[9..7] simm[3..0] simm[10..10] BTYPE_BGE[6..0]};
-// };
+    assembly {"blez" rs2 "," simm};
+    binary {simm[11..11] simm[9..4] rs2 ZERO_REG BTYPE_BGE[9..7] simm[3..0] simm[10..10] BTYPE_BGE[6..0]};
+};
 
 // /**
 //  * Jump (j) pseudo instruction
 //  * In RISCV, j offset equates to jal x0, offset (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_j_alias : assembler_alias(i_jtype_jlink)
-// {
+element i_j_alias : assembler_alias(i_jtype_jlink)
+{
 
-//     use relative_addr20 as simm;
+    use relative_addr20 as simm;
 
-//     assembly {"j" simm};
-//     binary {simm[19..19] simm[9..0] simm[10..10] simm[18..11] ZERO_REG JTYPE_JAL[6..0]};
+    assembly {"j" simm};
+    binary {simm[19..19] simm[9..0] simm[10..10] simm[18..11] ZERO_REG JTYPE_JAL[6..0]};
 
-// };
+};
 
 
 // /**
 //  * Jump Register (jr) pseudo instruction
 //  * In RISCV, jr rs equates to jalr x0, rs1, 0
 //  */
-// element i_jr_alias : assembler_alias(i_itype_jlreg)
-// {
+element i_jr_alias : assembler_alias(i_itype_jlreg)
+{
 
-//     use xpr_all as rs1;
+    use xpr_all as rs1;
 
-//     assembly {"jr" rs1};
-//     binary {ZERO_IMM12 rs1 ITYPE_JALR[9..7] ZERO_REG ITYPE_JALR[6..0]};
-// };
+    assembly {"jr" rs1};
+    binary {ZERO_IMM12 rs1 ITYPE_JALR[9..7] ZERO_REG ITYPE_JALR[6..0]};
+};
 
 // /**
 //  * Return (ret) pseudo instruction
 //  * In RISCV, ret equates to jalr x0, ReturnReg, 0 (x0 refers register 0 which also equates to the value 0)
 //  */
-// element i_ret_alias : assembler_alias(i_itype_jlreg), compiler_alias(i_itype_jlreg)
-// {
-//     assembly {"ret"};
-//     binary {ZERO_IMM12 RET_REG ITYPE_JALR[9..7] ZERO_REG ITYPE_JALR[6..0]};
+element i_ret_alias : assembler_alias(i_itype_jlreg), compiler_alias(i_itype_jlreg)
+{
+    assembly {"ret"};
+    binary {ZERO_IMM12 RET_REG ITYPE_JALR[9..7] ZERO_REG ITYPE_JALR[6..0]};
 
-//     semantics
-//     {
-//         uint32 jump_address;
+    semantics
+    {
+        uint32 jump_address;
 
-//         jump_address = rf_xpr_read(RETURN_ADDRESS);
+        jump_address = rf_xpr_read(RETURN_ADDRESS);
 
-//         write_pc(jump_address);
-//     };
-// };
+        write_pc(jump_address);
+    };
+};
 
 // /**
 //  * Call (call) pseudo instruction
 //  * In RISCV, call offset equates to jal rd, offset (rd = return register)
 //  */
-// element i_call_alias : assembler_alias(i_jtype_jlink), compiler_alias(i_jtype_jlink)
-// {
-//     use relative_addr20 as simm;
-//     assembly {"call" simm};
-//     binary { simm[19..19] simm[9..0] simm[10..10] simm[18..11] RET_REG JTYPE_JAL};
+element i_call_alias : assembler_alias(i_jtype_jlink), compiler_alias(i_jtype_jlink)
+{
+    use relative_addr20 as simm;
+    assembly {"call" simm};
+    binary { simm[19..19] simm[9..0] simm[10..10] simm[18..11] RET_REG JTYPE_JAL};
 
-//     semantics
-//     {
-//         #pragma compiler
-//         {
-//             uint32 jump_address;
+    semantics
+    {
+        #pragma compiler
+        {
+            uint32 jump_address;
 
-//             rf_xpr_write(r_pc, RETURN_ADDRESS); // PC has already incremented by 4, pointing to the next instruction
+            rf_xpr_write(r_pc, RETURN_ADDRESS); // PC has already incremented by 4, pointing to the next instruction
 
-//             // The he new address is the jump instruction address + the offset shifted over a half-word since instructions
-//             // cannot be offset by a single byte.  For a 32-bit RISC_V, all instructions will be aligned by 4-bytes but for
-//             // RISCV compressed instruction set, 16-bits/2-bytes, the instructions can be aligned half-word or 2-bytes.  Since
-//             // the pc address is already incremented to the next address by the time the instruction is operated, to get to the
-//             // initial pc address, the current pc address must be subracted by the instruction byte size
-//             jump_address = read_pc() + (int32) simm- RISCV_INSTR_SIZE;
-//             write_pc(jump_address);
-//         }
-//     };
-// };
+            // The he new address is the jump instruction address + the offset shifted over a half-word since instructions
+            // cannot be offset by a single byte.  For a 32-bit RISC_V, all instructions will be aligned by 4-bytes but for
+            // RISCV compressed instruction set, 16-bits/2-bytes, the instructions can be aligned half-word or 2-bytes.  Since
+            // the pc address is already incremented to the next address by the time the instruction is operated, to get to the
+            // initial pc address, the current pc address must be subracted by the instruction byte size
+            jump_address = read_pc() + (int32) simm- RISCV_INSTR_SIZE;
+            write_pc(jump_address);
+        }
+    };
+};
 // /**
 //  * Call register (call_reg) pseudo instruction
 //  * In RISCV, call_reg rs  equates to jalr return_register, rs1, offset (offset = 0)
 //  */
-// element i_call_reg_alias : assembler_alias(i_itype_jlreg), compiler_alias(i_itype_jlreg)
-// {
-//     use xpr_all as rs1;
-//     use simm12 as simm;
+element i_call_reg_alias : assembler_alias(i_itype_jlreg), compiler_alias(i_itype_jlreg)
+{
+    use xpr_all as rs1;
+    use simm12 as simm;
 
-//     assembly {"call_reg" "," simm "(" rs1 ")"};
-//     binary {simm rs1 ITYPE_JALR[9..7] RET_REG ITYPE_JALR[6..0]};
+    assembly {"call_reg" "," simm "(" rs1 ")"};
+    binary {simm rs1 ITYPE_JALR[9..7] RET_REG ITYPE_JALR[6..0]};
 
-//     semantics
-//     {
-//         #pragma compiler
-//         {
-//             uint32 jump_address;
+    semantics
+    {
+        #pragma compiler
+        {
+            uint32 jump_address;
 
-//             rf_xpr_write(read_pc(), RETURN_ADDRESS); // PC has already incremented by 4, pointing to the next instruction
+            rf_xpr_write(read_pc(), RETURN_ADDRESS); // PC has already incremented by 4, pointing to the next instruction
 
-//             jump_address = (rf_xpr_read(rs1) + (int32)simm) & BUS_MASK;         // Make half-word aligned per RISC-V standard
-//             write_pc(jump_address);
-//         }
-//     };
-// };
+            jump_address = (rf_xpr_read(rs1) + (int32)simm) & BUS_MASK;         // Make half-word aligned per RISC-V standard
+            write_pc(jump_address);
+        }
+    };
+};
 
-// element i_jal_abs_calias : compiler_alias(i_jtype_jlink)
-// {
-//     use opc_jal as opc;
-//     use xpr_all as rd;
-//     use relative_addr20 as simm;
-//     assembly {opc rd "," simm};
-//     semantics
-//     {
-//         #pragma compiler
-//         {
-//             rf_xpr_write(read_pc(), rd);
-//             write_pc((int32)simm);
-//         }
-//     };
-// };
+element i_jal_abs_calias : compiler_alias(i_jtype_jlink)
+{
+    use opc_jal as opc;
+    use xpr_all as rd;
+    use relative_addr20 as simm;
+    assembly {opc rd "," simm};
+    semantics
+    {
+        #pragma compiler
+        {
+            rf_xpr_write(read_pc(), rd);
+            write_pc((int32)simm);
+        }
+    };
+};
 
 /**
  * e_movi32
@@ -835,33 +835,33 @@ element i_mv_alias : assembler_alias(i_itype_alu)
  //#####################################################Phase 2#################################################################
 // uncomment the following lines of code
  //######################################################################################################################
-// emulation e_movi32
-// {
+emulation e_movi32
+{
 
-//     use i_utype_ops as i_lui0, i_lui1;
-//     use i_rtype_alu as i_or;
-//     use i_shift_imm as i_srli;
+    use i_utype_ops as i_lui0, i_lui1;
+    use i_rtype_alu as i_or;
+    use i_shift_imm as i_srli;
 
-//     unsigned attribute bit[32] imm32;
+    unsigned attribute bit[32] imm32;
 
-//     instructions
-//     {
-//         // load upper 20-bits into the destination register
-//         i_lui0(opc = opc_lui, rd = xpr_general, imm = uimm20(value = imm32[31..12]));
-//         // bring tn the lower 12-bits into register reserved for emulation
-//         i_lui1(opc = opc_lui, rd = x_30, imm = uimm20(value = imm32[11..0]));
-//         // now, put the 12-bit immediate back into the lower 12-bits
-//         i_srli(opc = opc_srli, rd = i_lui1(rd), rs1 = i_lui1(rd), imm = uimm5(value = 12));
-//         // Us the OR instruction to combine the upper 20-bit immedate value stored in the destination register
-//         // with the now unsigned 12-bit immediate value saved in one of the emulation registers
-//         i_or(opc = opc_or, rd = i_lui0(rd), rs1 = i_lui0(rd), rs2 = i_srli(rd));
-//     };
+    instructions
+    {
+        // load upper 20-bits into the destination register
+        i_lui0(opc = opc_lui, rd = xpr_general, imm = uimm20(value = imm32[31..12]));
+        // bring tn the lower 12-bits into register reserved for emulation
+        i_lui1(opc = opc_lui, rd = x_30, imm = uimm20(value = imm32[11..0]));
+        // now, put the 12-bit immediate back into the lower 12-bits
+        i_srli(opc = opc_srli, rd = i_lui1(rd), rs1 = i_lui1(rd), imm = uimm5(value = 12));
+        // Us the OR instruction to combine the upper 20-bit immedate value stored in the destination register
+        // with the now unsigned 12-bit immediate value saved in one of the emulation registers
+        i_or(opc = opc_or, rd = i_lui0(rd), rs1 = i_lui0(rd), rs2 = i_srli(rd));
+    };
 
-//     semantics
-//     {
-//         rf_xpr_write(imm32, i_lui0.rd);
-//     };
-// };
+    semantics
+    {
+        rf_xpr_write(imm32, i_lui0.rd);
+    };
+};
  //######################################################################################################################
 /**
  * To enable the Software Simulator, the following instructions are created.

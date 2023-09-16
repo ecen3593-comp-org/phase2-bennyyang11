@@ -51,27 +51,32 @@ inline void rf_xpr_write(const uint32 value, const uint5 index)
 // A load function is developed to support the RISCV byte, halfword, and word load operations.  This function enables
 // the simulation of the memory subsystem
 
-// uint32 load(const uint32 opc, const uint32 address)
-// {
-//     uint32 result, byte_count;
-//     uint1 cache_resp;
+uint32 load(const uint32 opc, const uint32 address)
+{
+    uint32 result, byte_count;
+    uint1 cache_resp;
 
-//     switch (opc){
-//         case ITYPE_LW:           
-//                 //ADD value here
-//         case ITYPE_LB:              
-//                 //ADD value here
-//         case ITYPE_LBU:             
-//                 //ADD value here
-//         case ITYPE_LH:           
-//                 //ADD value here
-//         case ITYPE_LHU:
-//                 //ADD value here
-//         default:
-//             byte_count = 0;
-// //            eprintf("Default case: %d", opc);
-//             break;
-//    }
+    switch (opc){
+        case ITYPE_LW:           
+                //ADD value here
+            byte_count = 4;
+        case ITYPE_LB:              
+                //ADD value here
+            byte_count = 1;
+        case ITYPE_LBU:             
+                //ADD value here
+            byte_count = 1;
+        case ITYPE_LH:           
+                //ADD value here
+            byte_count = 2;
+        case ITYPE_LHU:
+                //ADD value here
+            byte_count = 2;
+        default:
+            byte_count = 0;
+//            eprintf("Default case: %d", opc);
+            break;
+   }
 //  //##################################################Phase 2####################################################################
 //Values to choose from (Phase 2)
             //  byte_count = 1;
@@ -82,30 +87,30 @@ inline void rf_xpr_write(const uint32 value, const uint5 index)
             // break;
  //######################################################################################################################
     // Data Interface read
-// #ifdef OPTION_CACHES_ENABLED
-//     result = idcache.if_dcache.read(address, byte_count, cache_resp, pma_hprot(address, CP_AHB_DATA_ACCESS), CP_AHB_UNLOCK);
-//     dprintf("load [%08x] ", address);
-// #else
-//     result = ldst.read(address, byte_count, cache_resp, pma_hprot(address, CP_AHB_DATA_ACCESS), CP_AHB_UNLOCK);
-// #endif
-//     switch (opc) {
-//         case ITYPE_LB:
-//          //ADD value here
-//         case ITYPE_LH:
-//          //ADD value here
-//         case ITYPE_LBU:                         // Unsigned byte and halfword loads do not
-//         //ADD value here
-//         case ITYPE_LHU:                         // require sign extension and can result in
-//          //ADD value here
-//          case ITYPE_LW:                          // immediate return
-//          //ADD value here
-//         default:
-//             byte_count = 0;
-// //            eprintf("Default case: %d", opc);
-//             return byte_count;
-//             break;
-//     }
-// }
+#ifdef OPTION_CACHES_ENABLED
+    result = idcache.if_dcache.read(address, byte_count, cache_resp, pma_hprot(address, CP_AHB_DATA_ACCESS), CP_AHB_UNLOCK);
+    dprintf("load [%08x] ", address);
+#else
+    result = ldst.read(address, byte_count, cache_resp, pma_hprot(address, CP_AHB_DATA_ACCESS), CP_AHB_UNLOCK);
+#endif
+    switch (opc) {
+        case ITYPE_LB:
+         //ADD value here
+        case ITYPE_LH:
+         //ADD value here
+        case ITYPE_LBU:                         // Unsigned byte and halfword loads do not
+        //ADD value here
+        case ITYPE_LHU:                         // require sign extension and can result in
+         //ADD value here
+         case ITYPE_LW:                          // immediate return
+         //ADD value here
+        default:
+            byte_count = 0;
+//            eprintf("Default case: %d", opc);
+            return byte_count;
+            break;
+    }
+}
 //  //#####################################################Phase 2#################################################################
 //Values to choose from: (Phase 2)
  // return (int32)(int8) result;        // sign extend a signed byte load operation
